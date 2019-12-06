@@ -1,13 +1,19 @@
+![](http://netika.vn/wp-content/uploads/2017/09/4128139_h_aws1-768x284.jpg)
+
+> You don't have to be great to start, but you have to start to be great.
+
 # Learning AWS
 
-My journey learning Amazon Web Services
+My journey learning Amazon Web Services!
 
 
 ## Basic Flow
 
-1. IAM (Identity and Access Management) (đặc biệt chú ý role & policy)
+1. IAM (Identity and Access Management)
+    1. Role
+    2. Policy
 2. VPC
-    1. subnet
+    1. Subnet
     2. Route table
     3. Internet Gateway
     4. NAT gateway
