@@ -1,4 +1,8 @@
-![](http://netika.vn/wp-content/uploads/2017/09/4128139_h_aws1-768x284.jpg)
+<br/>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/donnemartin/data-science-ipython-notebooks/master/images/aws.png">
+</p>
+<br/>
 
 > You don't have to be great to start, but you have to start to be great.
 
