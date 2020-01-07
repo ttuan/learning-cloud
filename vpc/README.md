@@ -15,13 +15,18 @@ Subnet:
 
 
 Internet Gateway
-- Allow communication between instances in VPC with and Intenet
-
+- Allow communication between instances in VPC with and Intenet. It therefore
+    imposes no availability risks or bandwidth constraints on your network
+    traffic.
 
 purposes:
 + Provide a target in VPC route tables for Internet routable traffic.
 + Perform network address translation (NAT) for instances which have been
     assigned public IPv4 address.
+
+
+A VPC Gateway Attachment
+- Creates a relationship between a VPC and a gateway, such as this Internet Gateway.
 
 
 Route Table
@@ -31,6 +36,9 @@ Route Table
 
 If a subnet is associated with a route table, that has a route to the Internet
 Gateway, it's known a public subnet.
+
+Availability Zones
+- Additional public and private subnets have been added in another Availability Zone. This is best practice to ensure that your resources can run in multiple data centers (Availability Zones) to ensure High Availability in case of system failures.
 
 
 Create VPC, Subnet, Internet Gateway.
