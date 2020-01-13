@@ -10,3 +10,5 @@ Cache API responses via Amazon CloudFront for faster response times
 Deploy an API to multiple stages, allowing easy differentiation between development, test, production as well as versioning
 Connect custom domains to an API
 Define models to help standardize your API request and response transformations
+
+We can use API Gateway to create REST API
