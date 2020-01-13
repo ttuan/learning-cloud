@@ -1,0 +1,23 @@
+<html><body>
+<h2>This is not the page you are looking for!</h2>
+</body></html>
+
+#!/bin/sh
+cat > /tmp/stack_properties.ini <<EOF
+base_user=user
+base_user_name=BitNami User
+base_mail=user@example.com
+base_password=bitnami
+EOF
+
+
+/opt/bitnami/mysql/bin/mysqladmin -p'bitnami' -u root password 'bitnami'
+
+curl --capath /etc/ssl/certs/ --retry 3 -sS  -o /tmp/stack.bin -L --max-redirs 3 http://downloads.bitnami.com/files/stacks/phpbb/3.1.2-0/bitnami-phpbb-3.1.2-0-module-linux-x64-installer.run
+chmod +x /tmp/stack.bin
+/tmp/stack.bin --mode unattended --prefix /opt/bitnami --optionfile /tmp/stack_properties.ini
+
+/opt/bitnami/scripts/init/update_ip
+rm -f /tmp/stack.bin
+rm -f /tmp/stack_properties.ini
+
