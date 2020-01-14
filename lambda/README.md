@@ -4,3 +4,5 @@ AWS Lambda is a compute service that runs your code in response to events and au
 
 After create lambda function, you can create test script to trigger. View log
 from Cloudwatch Logs :D
+
+![](./Lambda_HowItWorks.png)
