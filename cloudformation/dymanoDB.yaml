@@ -1,0 +1,313 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  AWS CloudFormation Template for ScheduledFlightsDemo: Builds DynamoDB tables,
+  an S3 bucket, and Lambda functions for use in a real-time voting application.
+  ** This template creates multiple AWS resources. You will be billed for the
+  AWS resources used if you create a stack from this template.
+Parameters:
+  SuperMissionTableRead:
+    Description: Read capacity units for ScheduledFlightsDemo DynamoDB table
+    Type: String
+    MinLength: '1'
+    MaxLength: '6'
+    AllowedPattern: '[0-9]*'
+    Default: '1'
+  SuperMissionTableWrite:
+    Description: Write capacity units for ScheduledFlightsDemo DynamoDB table
+    Type: String
+    MinLength: '1'
+    MaxLength: '6'
+    AllowedPattern: '[0-9]*'
+    Default: '1'
+Resources:
+  DynamoDBTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: SuperHero
+          AttributeType: S
+        - AttributeName: MissionStatus
+          AttributeType: S
+        - AttributeName: Villain1
+          AttributeType: S
+        - AttributeName: Villain2
+          AttributeType: S
+        - AttributeName: Villain3
+          AttributeType: S
+        - AttributeName: SecretIdentity
+          AttributeType: S
+      KeySchema:
+        - AttributeName: SuperHero
+          KeyType: HASH
+        - AttributeName: MissionStatus
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref SuperMissionTableRead
+        WriteCapacityUnits: !Ref SuperMissionTableWrite
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      TableName: SuperMission
+      GlobalSecondaryIndexes:
+        - IndexName: myGSI
+          KeySchema:
+            - AttributeName: MissionStatus
+              KeyType: HASH
+            - AttributeName: Villain1
+              KeyType: RANGE
+          Projection:
+            NonKeyAttributes:
+              - SuperHero
+              - SecretIdentity
+            ProjectionType: INCLUDE
+          ProvisionedThroughput:
+            ReadCapacityUnits: '6'
+            WriteCapacityUnits: '6'
+        - IndexName: myGSI2
+          KeySchema:
+            - AttributeName: SecretIdentity
+              KeyType: HASH
+            - AttributeName: Villain3
+              KeyType: RANGE
+          Projection:
+            NonKeyAttributes:
+              - SuperHero
+              - Villain1
+            ProjectionType: INCLUDE
+          ProvisionedThroughput:
+            ReadCapacityUnits: '6'
+            WriteCapacityUnits: '6'
+      LocalSecondaryIndexes:
+        - IndexName: myLSI
+          KeySchema:
+            - AttributeName: SuperHero
+              KeyType: HASH
+            - AttributeName: Villain2
+              KeyType: RANGE
+          Projection:
+            NonKeyAttributes:
+              - Villain1
+              - MissionStatus
+            ProjectionType: INCLUDE
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: b83b7104-1a0f-461d-a04e-ab45ff1ff64b
+  AppendItemToListFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: AppendItemToListFunction
+      Handler: lambdafunc.handler
+      Role: !GetAtt SuperDynamoDBScanRole.Arn
+      Code:
+        S3Bucket: us-west-2-aws-training
+        S3Key: awsu-spl/spl-133/2.0.4.prod/scripts/lambdafunc.zip
+      Runtime: nodejs12.x
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 3adb868a-dd99-43ca-a2f3-7670e9718f5b
+  SuperDynamoDBScanRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: SuperDynamoDBScanRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: 'sts:AssumeRole'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 7336ff3e-5f01-4ae7-8783-7c694c672fef
+  DynamoDBFullRolePolicies:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: SuperDynamoDBScanPolicy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'dynamodb:Query'
+              - 'dynamodb:Scan'
+              - 's3:GetObject'
+              - 's3:PutObject'
+              - 'dynamodb:BatchWriteItem'
+              - 'dynamodb:*'
+            Resource:
+              - '*'
+      Roles:
+        - !Ref SuperDynamoDBScanRole
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 51958730-a0f0-4602-bc8f-5aa5aeeb329e
+  SuperDynamoDBQueryRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: SuperDynamoDBQueryRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: 'sts:AssumeRole'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 6eb771ca-90bb-4533-ad58-8e5e0d931a2b
+  DynamoDBSelectedRolePolicies:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: SuperDynamoDBQueryPolicy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'dynamodb:Query'
+            Resource: '*'
+      Roles:
+        - !Ref SuperDynamoDBQueryRole
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 00ab997e-e074-4689-8d2a-cc629fd6d703
+  ScheduledRule:
+    Type: 'AWS::Events::Rule'
+    Properties:
+      Description: ScheduledRule
+      ScheduleExpression: rate(1 minute)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt AppendItemToListFunction.Arn
+          Id: TargetFunctionV1
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 2612c0a7-854b-4b66-aca0-a031c10665ad
+  PermissionForEventsToInvokeLambda:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !Ref AppendItemToListFunction
+      Action: 'lambda:InvokeFunction'
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt ScheduledRule.Arn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: fa050741-a165-4c59-ae50-52b876a02dd6
+  ReadOnlyGroup:
+    Type: 'AWS::IAM::Group'
+    Properties:
+      GroupName: QLReadOnly
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/ReadOnlyAccess'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 4c5c4525-b1f4-4630-b90f-9c8f46997afe
+  GroupAssignment:
+    Type: 'AWS::IAM::UserToGroupAddition'
+    DependsOn: ReadOnlyGroup
+    Properties:
+      GroupName: QLReadOnly
+      Users:
+        - awsstudent
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 19f1757a-4a6c-40e6-b0db-81670bf826b6
+Metadata:
+  'AWS::CloudFormation::Designer':
+    4c5c4525-b1f4-4630-b90f-9c8f46997afe:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 60
+        'y': 90
+      z: 1
+      embeds: []
+    19f1757a-4a6c-40e6-b0db-81670bf826b6:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 190
+        'y': 90
+      z: 1
+      embeds: []
+      dependson:
+        - 4c5c4525-b1f4-4630-b90f-9c8f46997afe
+    6eb771ca-90bb-4533-ad58-8e5e0d931a2b:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 60
+        'y': 210
+      z: 1
+      embeds: []
+    00ab997e-e074-4689-8d2a-cc629fd6d703:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 180
+        'y': 210
+      z: 1
+      embeds: []
+      isassociatedwith:
+        - 6eb771ca-90bb-4533-ad58-8e5e0d931a2b
+    7336ff3e-5f01-4ae7-8783-7c694c672fef:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 300
+        'y': 90
+      z: 1
+      embeds: []
+    51958730-a0f0-4602-bc8f-5aa5aeeb329e:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 300
+        'y': 210
+      z: 1
+      embeds: []
+      isassociatedwith:
+        - 7336ff3e-5f01-4ae7-8783-7c694c672fef
+    3adb868a-dd99-43ca-a2f3-7670e9718f5b:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 60
+        'y': 330
+      z: 1
+      embeds: []
+    2612c0a7-854b-4b66-aca0-a031c10665ad:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 180
+        'y': 330
+      z: 1
+      embeds: []
+    fa050741-a165-4c59-ae50-52b876a02dd6:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 300
+        'y': 330
+      z: 1
+      embeds: []
+      isassociatedwith:
+        - 3adb868a-dd99-43ca-a2f3-7670e9718f5b
+    b83b7104-1a0f-461d-a04e-ab45ff1ff64b:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 420
+        'y': 90
+      z: 1
+      embeds: []
