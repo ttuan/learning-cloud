@@ -9,3 +9,18 @@ Amazon DynamoDB automatically spreads the data and traffic for the table over a 
 
 * Scan: Scan the entire table. You ca specify filters to apply to the results to
     refine the values returned to you, after the complete scan.
+
+Setting IAM with condition:
+```json
+"ForAllValues:StringEquals": {
+    "dynamodb:Attributes": [
+        "SuperHero",
+        "MissionStatus",
+        "Villain1",
+        "Villain2",
+        "Villain3"
+    ]
+}
+```
+
+allow users or entity that assumes the role to perform a Query operation, but only against the specified attributes. This powerful feature enables you to implement column-level security on your DynamoDB tables.

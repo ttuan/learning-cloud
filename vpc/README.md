@@ -45,3 +45,6 @@ Create VPC, Subnet, Internet Gateway.
 Create route table. Add route 0.0.0.0/0 to connect Internet Gateway. Add subnet
 to this route table.
 => Now your subnet is public subnet.
+
+
+EndPoint vs EndPointService???
