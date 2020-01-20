@@ -2,9 +2,9 @@
 
 Amazon Relational Database Service (Amazon RDS) is a web service that makes it easy to set up, operate, and scale a relational database in the cloud.
 
-Support: MySQL, SQL Server, Oracle or PostgreSQL
+Support: MySQL, SQL Server, Oracle or PostgreSQL, Aurora, MariaDB
 
-You will reconfigure a Drupal Open Source Content Management System (CMS) to use Amazon RDS for MySQL as the backend database with a multi-Availability Zone (AZ) deployment model.
+Amazon RDS Multi-AZ deployments provide enhanced availability and durability for Database (DB) Instances, making them a natural fit for production database workloads. When you provision a Multi-AZ DB Instance, Amazon RDS automatically creates a primary DB Instance and synchronously replicates the data to a standby instance in a different Availability Zone (AZ).
 
 ### Why
 * Pre-configured Parametters: pre-configured with a sensible set of parameters.
