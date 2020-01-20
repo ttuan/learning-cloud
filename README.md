@@ -39,10 +39,10 @@ Result: https://link.sun-asterisk.vn/qwiklabs-tuantv
 - [x] https://www.qwiklabs.com/focuses/8715?parent=catalog
 
 #### AWS Database
+- [x] https://www.qwiklabs.com/focuses/7930?parent=catalog
 - [x] https://www.qwiklabs.com/focuses/7627?parent=catalog
 - [x] https://www.qwiklabs.com/focuses/7867?parent=catalog
-- [ ] https://www.qwiklabs.com/focuses/8578?parent=catalog
-- [x] https://www.qwiklabs.com/focuses/7930?parent=catalog
+- [x] https://www.qwiklabs.com/focuses/8578?parent=catalog
 
 #### EBS
 - [ ] https://www.qwiklabs.com/focuses/370?parent=catalog
