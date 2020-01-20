@@ -48,7 +48,7 @@ Result: https://link.sun-asterisk.vn/qwiklabs-tuantv
 - [x] https://www.qwiklabs.com/focuses/8544?parent=catalog
 
 #### EBS
-- [ ] https://www.qwiklabs.com/focuses/370?parent=catalog
+- [x] https://www.qwiklabs.com/focuses/370?parent=catalog
 - [ ] https://www.qwiklabs.com/focuses/8464?parent=catalog
 
 #### Cloudwatch
