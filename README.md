@@ -51,6 +51,10 @@ Result: https://link.sun-asterisk.vn/qwiklabs-tuantv
 - [x] https://www.qwiklabs.com/focuses/370?parent=catalog
 - [x] https://www.qwiklabs.com/focuses/8464?parent=catalog
 
+#### CodeCommit & CodeDeploy
+- [x] https://www.qwiklabs.com/focuses/8716?parent=catalog
+- [ ] https://www.qwiklabs.com/focuses/8596?parent=catalog
+
 #### Cloudwatch
 - [ ] https://www.qwiklabs.com/focuses/6063?parent=catalog
 - [ ] https://www.qwiklabs.com/focuses/5654?parent=catalog
@@ -61,10 +65,6 @@ Result: https://link.sun-asterisk.vn/qwiklabs-tuantv
 #### Elastic Container Service
 - [ ] https://www.qwiklabs.com/focuses/8556?parent=catalog
 - [ ] https://www.qwiklabs.com/focuses/10183?parent=catalog
-
-#### CodeCommit & CodeDeploy
-- [ ] https://www.qwiklabs.com/focuses/8716?parent=catalog
-- [ ] https://www.qwiklabs.com/focuses/8596?parent=catalog
 
 #### Lambda
 - [ ] https://www.qwiklabs.com/focuses/10178?parent=catalog
