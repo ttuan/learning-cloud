@@ -53,7 +53,7 @@ Result: https://link.sun-asterisk.vn/qwiklabs-tuantv
 
 #### CodeCommit & CodeDeploy
 - [x] https://www.qwiklabs.com/focuses/8716?parent=catalog
-- [ ] https://www.qwiklabs.com/focuses/8596?parent=catalog
+- [x] https://www.qwiklabs.com/focuses/8596?parent=catalog
 
 #### Cloudwatch
 - [ ] https://www.qwiklabs.com/focuses/6063?parent=catalog
