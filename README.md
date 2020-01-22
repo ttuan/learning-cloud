@@ -55,6 +55,9 @@ Result: https://link.sun-asterisk.vn/qwiklabs-tuantv
 - [x] https://www.qwiklabs.com/focuses/8716?parent=catalog
 - [x] https://www.qwiklabs.com/focuses/8596?parent=catalog
 
+#### KMS
+- [x] https://www.qwiklabs.com/focuses/8387?parent=catalog
+
 #### Cloudwatch
 - [ ] https://www.qwiklabs.com/focuses/6063?parent=catalog
 - [ ] https://www.qwiklabs.com/focuses/5654?parent=catalog
@@ -68,9 +71,6 @@ Result: https://link.sun-asterisk.vn/qwiklabs-tuantv
 
 #### Lambda
 - [ ] https://www.qwiklabs.com/focuses/10178?parent=catalog
-
-#### KMS
-- [ ] https://www.qwiklabs.com/focuses/8387?parent=catalog
 
 #### Kinesis Firehose
 - [ ] https://www.qwiklabs.com/focuses/274?parent=catalog
