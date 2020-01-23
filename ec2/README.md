@@ -19,3 +19,5 @@ Use another tag to identify how many hours you want an instance to run, which is
 An elastic IP address will not change. A public IP address attached to an instance will change if the instance is stopped, as would happen when changing the instance type
 
 An EC2 instance can access the Internet from a private subnet provided it uses a NAT gateway or NAT instance. No need to stay in public subnet to access the internet
+
+
