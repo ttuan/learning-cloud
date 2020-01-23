@@ -23,3 +23,6 @@ When modify resources, just consider:
 FYI: The cfn-hup helper is a daemon that detects changes in resource metadata and runs user-specified actions when a change is detected. This allows you to make configuration updates on your running Amazon EC2 instances through the UpdateStack API action.
 /etc/cfn/cfn-hup.conf: stores the name of the stack and the AWS credentials that the cfn-hup daemon targets.
 /etc/cfn/hooks.d/cfn-auto-reloader.conf: The cfn-hup daemon parses and loads each file in this [hooks.d/] directory. The user actions that the cfn-hup daemon calls periodically are defined in the hooks.d/*.conf configuration file.
+
+## Book
+Almost everything in CloudFormation is case sensitive

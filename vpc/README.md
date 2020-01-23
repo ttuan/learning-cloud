@@ -48,3 +48,6 @@ to this route table.
 
 
 EndPoint vs EndPointService???
+
+You can’t change the primary CIDR for a VPC, so you must create a new one to connect it to your internal network.
+The definition of a public subnet is a subnet that has a default route pointing to an Internet gateway as a target. Otherwise, it’s a private subnet.

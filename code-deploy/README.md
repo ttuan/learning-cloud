@@ -39,3 +39,7 @@ Create deployment
 After update code, use this command to redeploy
 `aws deploy push --application-name WordPress_App --s3-location s3://BUCKET/WordPressApp.zip --ignore-hidden-files`
 Go to codedeploy revisions tab and create deployment => Config and deploy (you can do it by using aws-cli)
+
+
+## Book
+You can use CodeDeploy to deploy an application to Lambda or EC2 instances. But an AWS Systems Manager command document works only on EC2 instances.

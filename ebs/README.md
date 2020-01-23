@@ -49,3 +49,6 @@ cat /mnt/data-store/file.txt
     root volume: Shutdown => Create snapshot.
 - Only used storage blocks are copied to snapshots, so empty blocks do not take any snapshot storage space.
 
+
+## Book
+The EBS Lifecycle Manager can take scheduled snapshots of any EBS volume, regardless of attachment state.

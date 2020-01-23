@@ -15,3 +15,7 @@ Mark instances that you want to keep running, then have the Stopinator stop only
 Have another script that turns on the instances in the morning.
 Set different actions for weekdays and weekends.
 Use another tag to identify how many hours you want an instance to run, which is ideal for instances you just want to use for an experiments. Schedule the Stopinator to run hourly and configure it to terminate instances that run longer than the indicated number of hours.
+
+An elastic IP address will not change. A public IP address attached to an instance will change if the instance is stopped, as would happen when changing the instance type
+
+An EC2 instance can access the Internet from a private subnet provided it uses a NAT gateway or NAT instance. No need to stay in public subnet to access the internet

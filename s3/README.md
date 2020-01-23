@@ -101,3 +101,8 @@ we can config which files will be replicate by using prefix (for folder) and tag
 (with both key, value) for files.
 
 To protect against malicious intent and accidental deletion, object deletions that occur in a source bucket are not replicated to the destination bucket.
+
+S3 uses a read-after-write consistency model for new objects, so once you upload an object to S3, it’s immediately available.
+With SSE-C you provide your own keys for Amazon to use to decrypt and encrypt your data. AWS doesn’t persistently store the keys.
+S3 cross-region replication transfers objects between different buckets. Transfer acceleration uses a CloudFront edge location to speed up transfers between S3 and the Internet.
+Applying encryption to an unencrypted object will create a new, encrypted version of that object. Previous versions remain unencrypted.

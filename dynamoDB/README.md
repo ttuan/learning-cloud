@@ -23,4 +23,7 @@ Setting IAM with condition:
 }
 ```
 
-allow users or entity that assumes the role to perform a Query operation, but only against the specified attributes. This powerful feature enables you to implement column-level security on your DynamoDB tables.
+Allow users or entity that assumes the role to perform a Query operation, but only against the specified attributes. This powerful feature enables you to implement column-level security on your DynamoDB tables.
+
+# Book
+DynamoDB is a key-value store that can be used to store items up to 400 KB in size.
