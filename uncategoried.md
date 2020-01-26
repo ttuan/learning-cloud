@@ -1,9 +1,5 @@
-1. The Business plan offers access to a support API, but the Developer plan does not.
-2. Customers are responsible for managing the network configuration of EC2 instances. AWS is responsible for the physical network infrastructure.
-
 # Core AWS Service
 ## Cloud Computing and AWS
-
 The technology that lies at the core of all cloud operations is virtualization.
 Virtualization split to small units: Physical Server, Compute Resource, Storage, Hypervisor, VMs.
 
@@ -32,17 +28,17 @@ Virtualization split to small units: Physical Server, Compute Resource, Storage,
 By “guarantee,” AWS doesn’t mean that service disruptions or security breaches will never occur.
 The important thing to remember is that it’s not if things will fail but when. - May fail but it will notice us.
 
-
-
 #### AWS Plans
 - Basic: Free, can access customer services, documentation, white papers and support forum.
 - Developer: $29/month, adds access for one account holder to a Cloud Support associate along with limited general guidance and “system impaired” response.
 - Business: $100/month (and up), eliver faster guaranteed response times to unlimited users for help with “impaired” systems, personal guidance and troubleshoot- ing, and a support API.
 - Enterprise: At least $15,000/month, cover all of the other features, plus direct access to AWS solutions architects for operational and design reviews, your own technical account manager, and something called a support concierge.
 
-
-
 ## EC2 and EBS
+- Resilient
+- Performant
+- Secure
+- Cost-optimized
 
 ## S3 and Glacier Storage
 
