@@ -58,16 +58,16 @@ Result: https://link.sun-asterisk.vn/qwiklabs-tuantv
 #### KMS
 - [x] https://www.qwiklabs.com/focuses/8387?parent=catalog
 
+#### Elastic Container Service
+- [x] https://www.qwiklabs.com/focuses/8556?parent=catalog
+
 #### Cloudwatch
 - [ ] https://www.qwiklabs.com/focuses/6063?parent=catalog
 - [ ] https://www.qwiklabs.com/focuses/5654?parent=catalog
+- [ ] https://www.qwiklabs.com/focuses/10183?parent=catalog
 
 #### Beanstalk
 - [ ] https://www.qwiklabs.com/focuses/8525?parent=catalog
-
-#### Elastic Container Service
-- [ ] https://www.qwiklabs.com/focuses/8556?parent=catalog
-- [ ] https://www.qwiklabs.com/focuses/10183?parent=catalog
 
 #### Lambda
 - [ ] https://www.qwiklabs.com/focuses/10178?parent=catalog
