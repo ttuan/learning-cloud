@@ -66,14 +66,14 @@ Result: https://link.sun-asterisk.vn/qwiklabs-tuantv
 - [ ] https://www.qwiklabs.com/focuses/5654?parent=catalog
 - [ ] https://www.qwiklabs.com/focuses/10183?parent=catalog
 
+#### Kinesis Firehose
+- [x] https://www.qwiklabs.com/focuses/274?parent=catalog
+
 #### Beanstalk
 - [ ] https://www.qwiklabs.com/focuses/8525?parent=catalog
 
 #### Lambda
 - [ ] https://www.qwiklabs.com/focuses/10178?parent=catalog
-
-#### Kinesis Firehose
-- [ ] https://www.qwiklabs.com/focuses/274?parent=catalog
 
 #### Cloud Search
 - [ ] https://www.qwiklabs.com/focuses/8400?parent=catalog
