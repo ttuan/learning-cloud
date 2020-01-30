@@ -61,13 +61,11 @@ Result: https://link.sun-asterisk.vn/qwiklabs-tuantv
 #### Elastic Container Service
 - [x] https://www.qwiklabs.com/focuses/8556?parent=catalog
 
-#### Cloudwatch
-- [ ] https://www.qwiklabs.com/focuses/6063?parent=catalog
-- [ ] https://www.qwiklabs.com/focuses/5654?parent=catalog
-- [ ] https://www.qwiklabs.com/focuses/10183?parent=catalog
-
 #### Kinesis Firehose
 - [x] https://www.qwiklabs.com/focuses/274?parent=catalog
+
+#### Audit
+- [x] https://www.qwiklabs.com/focuses/7948?parent=catalog
 
 #### Beanstalk
 - [ ] https://www.qwiklabs.com/focuses/8525?parent=catalog
@@ -81,8 +79,10 @@ Result: https://link.sun-asterisk.vn/qwiklabs-tuantv
 #### IOT
 - [ ] https://www.qwiklabs.com/focuses/8546?parent=catalog
 
-#### Audit
-- [ ] https://www.qwiklabs.com/focuses/7948?parent=catalog
+#### Cloudwatch
+- [ ] https://www.qwiklabs.com/focuses/6063?parent=catalog
+- [ ] https://www.qwiklabs.com/focuses/5654?parent=catalog
+- [ ] https://www.qwiklabs.com/focuses/10183?parent=catalog
 
 ## II. Books
 - [ ] https://1drv.ms/b/s!AsY96NdxxwbYhSbUxEBOXviYdXc9
