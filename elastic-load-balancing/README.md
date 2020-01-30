@@ -17,3 +17,10 @@ If all of your Amazon EC2 instances in one Availability Zone are unhealthy, and 
 Elastic Load Balancing automatically scales its request-handling capacity to meet the demands of application traffic. Additionally, Elastic Load Balancing offers integration with Auto Scaling to ensure that you have back-end capacity to meet varying levels of traffic levels without requiring manual intervention.
 
 Elastic Load Balancing works with Amazon Virtual Private Cloud (VPC) to provide robust networking and security features. You can create an internal (non-Internet facing) load balancer to route traffic using private IP addresses within your virtual network. You can implement a multi-tiered architecture using internal and Internet-facing load balancers to route traffic between application tiers. With this multi-tier architecture, your application infrastructure can use private IP addresses and security groups, allowing you to expose only the Internet-facing tier with public IP addresses.
+
+Without Cross-Zone Load Balancing, it is more likely that requests made in a short interval from a single browser will go to instances in a single Availability Zone. Since you have one Amazon EC2 instance in each Availability Zone, without Cross-Zone Load Balancing, all requests would go to the same Amazon EC2 instance.
+
+
+Statefull and stateless
+- Shared data should be store in somewhere, which both ec2 instances can access.
+    For example: Session should be stored in redis or db. (not in instance). Or carrierwave cached file (when form is invalid) should be stored in s3
