@@ -21,3 +21,9 @@ Livestream video
     message to topic.
 
 - Create and save dashboard
+
+
+====
+Add VPC log (EC2, VPC, ...) log to CloudWatch. Write a lambda function to add this logs to Elastic Search => Use Kibana to view this log.
+
+We can use this way to detect `Brute force attacks`, `SSH attacks` or other attacks

@@ -72,8 +72,8 @@ Result: https://link.sun-asterisk.vn/qwiklabs-tuantv
 
 #### Cloudwatch
 - [x] https://www.qwiklabs.com/focuses/6063?parent=catalog
-- [ ] https://www.qwiklabs.com/focuses/5654?parent=catalog
-- [ ] https://www.qwiklabs.com/focuses/10183?parent=catalog
+- [x] https://www.qwiklabs.com/focuses/5654?parent=catalog
+- [x] https://www.qwiklabs.com/focuses/10183?parent=catalog
 
 #### Lambda
 - [ ] https://www.qwiklabs.com/focuses/10178?parent=catalog
