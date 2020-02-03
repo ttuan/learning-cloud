@@ -78,11 +78,11 @@ Result: https://link.sun-asterisk.vn/qwiklabs-tuantv
 #### IOT
 - [x] https://www.qwiklabs.com/focuses/8546?parent=catalog
 
+#### Cloud Search
+- [x] https://www.qwiklabs.com/focuses/8400?parent=catalog
+
 #### Lambda
 - [ ] https://www.qwiklabs.com/focuses/10178?parent=catalog
-
-#### Cloud Search
-- [ ] https://www.qwiklabs.com/focuses/8400?parent=catalog
 
 ## II. Books
 - [ ] https://1drv.ms/b/s!AsY96NdxxwbYhSbUxEBOXviYdXc9
