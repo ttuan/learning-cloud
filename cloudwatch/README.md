@@ -12,3 +12,12 @@ We can discovery log in CloudWatch:
 + Which IP addresses of last IAM user logged in, what action did user take?
 + Top 20 IP address in Access logs
 + Which IP address access to 3306, 22, ...
+
+
+====
+Livestream video
+
+- MediaLive push alerts -> CloudWatch Events -> Use SNS as a target -> SNS: Push
+    message to topic.
+
+- Create and save dashboard
