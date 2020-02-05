@@ -1,8 +1,22 @@
 # EC2 - Elastic Compute Cloud
 
-When you want to down size of EC2:
-create snapshot -> tạo disk từ snapshot đó -> Create new VM và attach disk đó vào nếu VM mới khác region
+## Which to concern
+1. Resilient: Thiết kế hệ thống có tính đàn hồi, linh hoạt.
+2. Performance: Storage + db sao cho phù hợp, dễ scale.
+3. Secure: Bảo mật ở tầng app + data.
+4. Cost-optimized: Tiết kiệm chi phí cho storage và compute.
 
+## Note
+* EC2 instance: CPU, RAM(Memory), Storage(Volume) and Network.
+* Instance type/ Profile we choose => Instance hardware, just balance between cost and hardward we need
+* Instance Type: General Purpose, Compute Optimized, Memory Optimized, Accelerated computing, Storage optimized.
+* Tenancy: Default is `shared tenacy`. Dedicated Instance:  Riêng server vật lý.
+    Dedicated Host: Chia riêng server vật lý, config custom được nhiều hơn.
+* An elastic IP address will not change. A public IP address attached to an instance will change if the instance is stopped, as would happen when changing the instance type
+* Go to `curl http://169.254.169.254/lastest/meta-data/` to get ec2 info.
+* An EC2 instance can access the Internet from a private subnet provided it uses a NAT gateway or NAT instance. No need to stay in public subnet to access the internet
+
+### Bastion
 A Bastion host (also known as a Jump Box) is a computer on a network specifically designed and configured to withstand attacks. The bastion generally hosts a single application, for example a proxy server, and all other services are removed or limited to reduce potential threats to the computer.
 Security can be further improved by limiting the range of IP Addresses that are allowed to connect to the Bastion host. The best way to do this is to open access only when required, and to remove access when not required. To assist with this, the AWS CLI can be used to grant and revoke security access.
 
@@ -15,13 +29,6 @@ Mark instances that you want to keep running, then have the Stopinator stop only
 Have another script that turns on the instances in the morning.
 Set different actions for weekdays and weekends.
 Use another tag to identify how many hours you want an instance to run, which is ideal for instances you just want to use for an experiments. Schedule the Stopinator to run hourly and configure it to terminate instances that run longer than the indicated number of hours.
-
-An elastic IP address will not change. A public IP address attached to an instance will change if the instance is stopped, as would happen when changing the instance type
-
-An EC2 instance can access the Internet from a private subnet provided it uses a NAT gateway or NAT instance. No need to stay in public subnet to access the internet
-
-You manage hardware resource by instance type/ hardware profile we select.
-Consider: Compute power, memory & storage space.
 
 #### Instance Types
 
@@ -37,12 +44,22 @@ Consider: Compute power, memory & storage space.
 - launch an EC2 instance in the region that’s physically closest to the majority of your customers
 - costs and even functionality of services and features might vary between regions
 2. VPC
-3. Tenacy model
-The default setting is shared tenancy, where your instance will run as a virtual machine on a physical server that’s concurrently hosting other instances.
-Dedicated Host option allows you to actually identify and control the physical server you’ve been assigned to meet more restric- tive licensing or regulatory requirements.
 
 4. Behavior
 User data can consist of a few simple commands to install a web server and populate its web root, or it can be a sophisticated script setting the instance up
 
 #### Pricing
  * less than 12 months - pay for each hour your instance is running through the on-demand model.
+ * running 24/7 - pay for reserved model
+
+When you want to down size of EC2:
+create snapshot -> tạo disk từ snapshot đó -> Create new VM và attach disk đó vào nếu VM mới khác region
+
+
+Nếu dung instance volume, khi shutdown instance sẽ bị mất data. Tuy nhiên vẫn
+dùng vì:
++ SSD, lại đc attack vào instance nên truy cập dữ liệu nhanh.
++ PHí đã bao gồm trong phí thuê EC2.
+
+
+Private IP for an EC2: `10.0.0.0` -> `10.255.255.255`, `172.16.0.0` -> `172.31.255.255`, `192.168.0.0` -> `192.168.255.255`

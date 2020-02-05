@@ -23,7 +23,6 @@ For those wanting even more durability, Amazon EBS provides the ability to creat
 * Variable size: Volume sizes range from 1 GB to 16 TB.
 * Easy to use: Amazon EBS volumes can be easily created, attached, backed up, restored, and deleted.
 
-
 After attach volume to instance, we need to config file system:
 ```sh
 # Create an ext3 file system on the new volume
@@ -52,3 +51,10 @@ cat /mnt/data-store/file.txt
 
 ## Book
 The EBS Lifecycle Manager can take scheduled snapshots of any EBS volume, regardless of attachment state.
+
++ Provisioned IOPS SSD: High Input/Output per second - 32k / 4GB-16TB
++ General purpose SSD: 1Gb-16TB / 10k
+
+
+Easy to create snapshot and encrypt data.
+
