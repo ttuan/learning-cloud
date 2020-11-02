@@ -41,3 +41,5 @@ https://cloud.google.com/certification/guides/cloud-engineer
 
 ## III. Others
 - [A Vuong's Schedule](https://link.sun-asterisk.vn/qL1qIh)
+- [Google Cloud Docs](https://cloud.google.com/docs)
+- [Google Cloud Solution](https://cloud.google.com/solutions/)
