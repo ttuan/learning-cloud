@@ -13,7 +13,7 @@ https://cloud.google.com/certification/guides/cloud-engineer
 
 ## I. Labs
 ### Google Cloud Essentials
-- [ ] https://www.qwiklabs.com/quests/23
+- [x] https://www.qwiklabs.com/quests/23
 
 ### Security & Identity Fundamentals
 - [ ] https://www.qwiklabs.com/quests/40
