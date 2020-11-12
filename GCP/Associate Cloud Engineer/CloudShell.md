@@ -183,3 +183,18 @@ gcloud compute firewall-rules create network-a-fw --network network-a --allow tc
 ```
 
 Để peer được 2 thằng thì phải tạo được VPC network peering từ cả 2 project. 2 bên trỏ đến nhau =))
+
+## App Engine
+
+```sh
+# App Engine
+
+# Deploy with an app.yaml file
+gcloud app deploy
+
+# Browser app
+gcloud app browse
+
+# disable the Flex API
+gcloud services disable appengineflex.googleapis.com
+```
