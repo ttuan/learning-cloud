@@ -164,3 +164,22 @@ gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
     --member serviceAccount:my-sa-123@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com --role roles/editor
 ```
 
+
+## VPC Peering
+```sh
+# VPC Peering
+# Create custom network
+gcloud compute networks create network-a --subnet-mode custom
+
+# Create a subnet within this VPC and specify a region and IP range
+gcloud compute networks subnets create network-a-central --network network-a \
+    --range 10.0.0.0/16 --region us-central1
+
+# Create VM instances
+gcloud compute instances create vm-a --zone us-central1-a --network network-a --subnet network-a-central
+
+# enable SSH and icmp (Internet control message protocol
+gcloud compute firewall-rules create network-a-fw --network network-a --allow tcp:22,icmp
+```
+
+Để peer được 2 thằng thì phải tạo được VPC network peering từ cả 2 project. 2 bên trỏ đến nhau =))
