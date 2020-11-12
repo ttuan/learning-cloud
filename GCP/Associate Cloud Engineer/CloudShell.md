@@ -115,3 +115,52 @@ gcloud compute forwarding-rules list
 HTTP(s) Load balancer rule is **global**
 Network load balancer is regional, non-proxied load balancer.
 
+
+
+
+## IAM
+
+```sh
+# IAM
+# View the role metadata/ Describe a role
+gcloud iam roles describe [ROLE_NAME]
+
+# List all roles that can be applied to a given resource.
+gcloud iam list-grantable-roles //cloudresourcemanager.googleapis.com/projects/$DEVSHELL_PROJECT_ID
+
+# Create custom role from role definition.yaml file
+gcloud iam roles create editor --project $DEVSHELL_PROJECT_ID --file role-definition.yaml
+
+# Create using flags
+gcloud iam roles create viewer --project $DEVSHELL_PROJECT_ID \
+--title "Role Viewer" --description "Custom role description." \
+--permissions compute.instances.get,compute.instances.list --stage ALPHA
+
+# List custom roles
+gcloud iam roles list --project $DEVSHELL_PROJECT_ID
+
+# Update a role, remember create file file with etag value (which you get from describe command)
+gcloud iam roles update [ROLE_ID] --project $DEVSHELL_PROJECT_ID --file new-role-definition.yaml
+
+# Update by using flags
+gcloud iam roles update viewer --project $DEVSHELL_PROJECT_ID --add-permissions storage.buckets.get,storage.buckets.list
+
+# Change stage value to disable a custom role
+gcloud iam roles update viewer --project $DEVSHELL_PROJECT_ID --stage DISABLED
+
+# Delete a custom role
+gcloud iam roles delete viewer --project $DEVSHELL_PROJECT_ID
+
+# Undelete a role (< 7 day)
+gcloud iam roles undelete viewer --project $DEVSHELL_PROJECT_ID
+
+# =====================
+
+# Create service account
+gcloud iam service-accounts create my-sa-123 --display-name "my service account"
+
+# Gain role for service account
+gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
+    --member serviceAccount:my-sa-123@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com --role roles/editor
+```
+
