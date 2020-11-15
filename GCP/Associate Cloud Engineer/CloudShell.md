@@ -476,3 +476,20 @@ gcloud beta container clusters create private-cluster2 \
     --services-secondary-range-name my-svc-range \
     --cluster-secondary-range-name my-pod-range
 ```
+
+## Cloud Function
+
+```sh
+# Deploy a cloud function
+# When deploying a new function, you must specify --trigger-topic, --trigger-bucket, or --trigger-http
+gcloud functions deploy helloWorld \
+  --stage-bucket [BUCKET_NAME] \
+  --trigger-topic hello_world \
+  --runtime nodejs8
+
+# Describe a function
+gcloud functions describe helloWorld
+
+# View logs cloud function
+gcloud functions logs read helloWorld
+```
