@@ -397,3 +397,61 @@ gcloud compute packet-mirrorings create mirror-dm-stamford-web \
 --mirrored-subnets=dm-stamford-uswest4 \
 --region=us-west4
 ```
+
+
+## Kubernetes Cluster
+```sh
+# Create private cluster
+gcloud beta container clusters create private-cluster \
+    --enable-private-nodes \
+    --master-ipv4-cidr 172.16.0.16/28 \
+    --enable-ip-alias \
+    --create-subnetwork ""
+
+# List the subnet in default network
+gcloud compute networks subnets list --network default
+
+# Get information about the automatically created subnet
+gcloud compute networks subnets describe [SUBNET_NAME] --region us-central1
+
+# Create source instance which is used to check the connectivity to Kubernetes Network
+gcloud compute instances create source-instance --zone us-central1-a --scopes 'https://www.googleapis.com/auth/cloud-platform'
+
+# Get External IP
+gcloud compute instances describe source-instance --zone us-central1-a | grep natIP
+
+# Authorize your external address range with the CIDR range of the external addresses
+gcloud container clusters update private-cluster \
+    --enable-master-authorized-networks \
+    --master-authorized-networks [MY_EXTERNAL_RANGE](ip/32)
+
+# SSH to source instance
+gcloud compute ssh source-instance --zone us-central1-a
+
+# Configure access to the Kubernetes cluster from SSH shell
+gcloud container clusters get-credentials private-cluster2 --zone us-central1-a
+
+# Verify that your cluster nodes do not have external IP addresses
+kubectl get nodes --output yaml | grep -A4 addresses
+
+# Delete cluster
+gcloud container clusters delete private-cluster --zone us-central1-a
+
+-------
+# Create a subnetwork and secondary range
+gcloud compute networks subnets create my-subnet \
+    --network default \
+    --range 10.0.4.0/22 \
+    --enable-private-ip-google-access \
+    --region us-central1 \
+    --secondary-range my-svc-range=10.0.32.0/20,my-pod-range=10.4.0.0/14
+
+# Create private cluster use above subnetwork
+gcloud beta container clusters create private-cluster2 \
+    --enable-private-nodes \
+    --enable-ip-alias \
+    --master-ipv4-cidr 172.16.0.32/28 \
+    --subnetwork my-subnet \
+    --services-secondary-range-name my-svc-range \
+    --cluster-secondary-range-name my-pod-range
+```
