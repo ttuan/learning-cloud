@@ -19,7 +19,7 @@ https://cloud.google.com/certification/guides/cloud-engineer
 - [x] https://www.qwiklabs.com/quests/40
 
 ### Baseline: Infrastructure
-- [ ] https://www.qwiklabs.com/quests/33
+- [x] https://www.qwiklabs.com/quests/33
 
 ### Baseline: Deploy & Develop
 - [ ] https://www.qwiklabs.com/quests/37
