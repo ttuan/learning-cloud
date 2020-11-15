@@ -550,3 +550,10 @@ gcloud source repos create REPO_DEMO
 # Clone repo
 gcloud source repos clone REPO_DEMO
 ```
+
+## Cloud SQL
+
+```sh
+# Connect to db
+gcloud sql connect myinstance --user=root
+```
