@@ -493,3 +493,31 @@ gcloud functions describe helloWorld
 # View logs cloud function
 gcloud functions logs read helloWorld
 ```
+
+## Cloud Pub/sub
+
+```sh
+# Create a topic
+gcloud pubsub topics create myTopic
+
+# List all topic
+gcloud pubsub topics list
+
+# Delete a topic
+gcloud pubsub topics delete Test1
+
+# Create a subscription to a topic
+gcloud  pubsub subscriptions create --topic myTopic mySubscription
+
+# List subscriptions of a topic
+gcloud pubsub topics list-subscriptions myTopic
+
+# Delete a subscription
+gcloud pubsub subscriptions delete Test1
+
+# Publish a message
+gcloud pubsub topics publish myTopic --message "Hello"
+
+# Pull messages of a topic
+gcloud pubsub subscriptions pull mySubscription --auto-ack --limit=3
+```
