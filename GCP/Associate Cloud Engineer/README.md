@@ -22,7 +22,7 @@ https://cloud.google.com/certification/guides/cloud-engineer
 - [x] https://www.qwiklabs.com/quests/33
 
 ### Baseline: Deploy & Develop
-- [ ] https://www.qwiklabs.com/quests/37
+- [x] https://www.qwiklabs.com/quests/37
 
 ### Networking in the Google Cloud
 - [ ] https://www.qwiklabs.com/quests/31
