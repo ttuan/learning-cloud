@@ -16,7 +16,7 @@ https://cloud.google.com/certification/guides/cloud-engineer
 - [x] https://www.qwiklabs.com/quests/23
 
 ### Security & Identity Fundamentals
-- [ ] https://www.qwiklabs.com/quests/40
+- [x] https://www.qwiklabs.com/quests/40
 
 ### Baseline: Infrastructure
 - [ ] https://www.qwiklabs.com/quests/33
