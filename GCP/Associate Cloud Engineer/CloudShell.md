@@ -198,3 +198,55 @@ gcloud app browse
 # disable the Flex API
 gcloud services disable appengineflex.googleapis.com
 ```
+
+## Cloud Storage
+
+```sh
+# Cloud storage
+gsutil mb gs://${BUCKET_NAME}
+
+# Copy data from other bucket
+gsutil cp gs://enron_emails/allen-p/inbox/1. .
+
+```
+
+## KMS - Key Management Service
+
+```sh
+# Enable KMS
+gcloud services enable cloudkms.googleapis.com
+
+# Create KeyRing
+gcloud kms keyrings create $KEYRING_NAME --location global
+
+# Create CryptoKey from KeyRing
+gcloud kms keys create $CRYPTOKEY_NAME --location global \
+      --keyring $KEYRING_NAME \
+      --purpose encryption
+
+# Encrypt with KMS
+curl -v "https://cloudkms.googleapis.com/v1/projects/$DEVSHELL_PROJECT_ID/locations/global/keyRings/$KEYRING_NAME/cryptoKeys/$CRYPTOKEY_NAME:encrypt" \
+  -d "{\"plaintext\":\"$PLAINTEXT\"}" \
+  -H "Authorization:Bearer $(gcloud auth application-default print-access-token)"\
+  -H "Content-Type:application/json" \
+| jq .ciphertext -r > 1.encrypted
+
+curl -v "https://cloudkms.googleapis.com/v1/projects/$DEVSHELL_PROJECT_ID/locations/global/keyRings/$KEYRING_NAME/cryptoKeys/$CRYPTOKEY_NAME:decrypt" \
+  -d "{\"ciphertext\":\"$(cat 1.encrypted)\"}" \
+  -H "Authorization:Bearer $(gcloud auth application-default print-access-token)"\
+  -H "Content-Type:application/json" \
+| jq .plaintext -r | base64 -d
+
+# Add role to manage KMS key
+gcloud kms keyrings add-iam-policy-binding $KEYRING_NAME \
+    --location global \
+    --member user:$USER_EMAIL \
+    --role roles/cloudkms.admin
+
+# Add permission to encrypt/decrypt any CryptoKey which is created from your KeyRing
+gcloud kms keyrings add-iam-policy-binding $KEYRING_NAME \
+    --location global \
+    --member user:$USER_EMAIL \
+    --role roles/cloudkms.cryptoKeyEncrypterDecrypter
+
+```
