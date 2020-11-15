@@ -250,3 +250,150 @@ gcloud kms keyrings add-iam-policy-binding $KEYRING_NAME \
     --role roles/cloudkms.cryptoKeyEncrypterDecrypter
 
 ```
+# Cloud Package Mirroring
+```sh
+# Create Virtual Private Network
+gcloud compute networks create dm-stamford \
+--subnet-mode=custom
+
+# Add a subnet to the VPC for mirrored traffic in us-west4:
+gcloud compute networks subnets create dm-stamford-uswest4 \
+--range=172.21.0.0/24 \
+--network=dm-stamford \
+--region=us-west4
+
+# Add a subnet to the VPC for the collector in us-west4:
+gcloud compute networks subnets create dm-stamford-uswest4-ids \
+--range=172.21.1.0/24 \
+--network=dm-stamford \
+--region=us-west4
+
+------
+# Create firewall rules
+gcloud compute firewall-rules create fw-dm-stamford-allow-any-web \
+--direction=INGRESS \
+--priority=1000 \
+--network=dm-stamford \
+--action=ALLOW \
+--rules=tcp:80,icmp \
+--source-ranges=0.0.0.0/0
+
+gcloud compute firewall-rules create fw-dm-stamford-ids-any-any \
+--direction=INGRESS \
+--priority=1000 \
+--network=dm-stamford \
+--action=ALLOW \
+--rules=all \
+--source-ranges=0.0.0.0/0 \
+--target-tags=ids
+
+gcloud compute firewall-rules create fw-dm-stamford-iapproxy \
+--direction=INGRESS \
+--priority=1000 \
+--network=dm-stamford \
+--action=ALLOW \
+--rules=tcp:22,icmp \
+--source-ranges=35.235.240.0/20
+
+# Create Cloud NAT
+## Create Cloud route
+gcloud compute routers create router-stamford-nat-west4 \
+--region=us-west4 \
+--network=dm-stamford
+
+## Config NAT
+gcloud compute routers nats create nat-gw-dm-stamford-west4 \
+--router=router-stamford-nat-west4 \
+--router-region=us-west4 \
+--auto-allocate-nat-external-ips \
+--nat-all-subnet-ip-ranges
+
+-----------
+# Create VM
+# Create instance-template
+gcloud compute instance-templates create template-dm-stamford-web-us-west4 \
+--region=us-west4 \
+--network=dm-stamford \
+--subnet=dm-stamford-uswest4 \
+--machine-type=g1-small \
+--image=ubuntu-1604-xenial-v20200807 \
+--image-project=ubuntu-os-cloud \
+--tags=webserver \
+--metadata=startup-script='#! /bin/bash
+  apt-get update
+  apt-get install apache2 -y
+  vm_hostname="$(curl -H "Metadata-Flavor:Google" \
+  http://169.254.169.254/computeMetadata/v1/instance/name)"
+  echo "Page served from: $vm_hostname" | \
+  tee /var/www/html/index.html
+  systemctl restart apache2'
+
+# Create managed instance group for the WebServer
+gcloud compute instance-groups managed create mig-dm-stamford-web-uswest4 \
+    --template=template-dm-stamford-web-us-west4 \
+    --size=2 \
+    --zone=us-west4-a
+
+# Create an Instance Template for the IDS VM
+gcloud compute instance-templates create template-dm-stamford-ids-us-west4 \
+--region=us-west4 \
+--network=dm-stamford \
+--no-address \
+--subnet=dm-stamford-uswest4-ids \
+--image=ubuntu-1604-xenial-v20200807 \
+--image-project=ubuntu-os-cloud \
+--tags=ids,webserver \
+--metadata=startup-script='#! /bin/bash
+  apt-get update
+  apt-get install apache2 -y
+  vm_hostname="$(curl -H "Metadata-Flavor:Google" \
+  http://169.254.169.254/computeMetadata/v1/instance/name)"
+  echo "Page served from: $vm_hostname" | \
+  tee /var/www/html/index.html
+  systemctl restart apache2'
+
+# Create managed instance group for the IDS VM
+gcloud compute instance-groups managed create mig-dm-stamford-ids-uswest4 \
+    --template=template-dm-stamford-ids-us-west4 \
+    --size=1 \
+    --zone=us-west4-a
+
+
+--------
+# Create Internal LoadBalancer
+# Create basic health check for the backend services
+gcloud compute health-checks create tcp hc-tcp-80 --port 80
+
+# Create a backend service group to be used for an ILB
+gcloud compute backend-services create be-dm-stamford-suricata-us-west4 \
+--load-balancing-scheme=INTERNAL \
+--health-checks=hc-tcp-80 \
+--network=dm-stamford \
+--protocol=TCP \
+--region=us-west4
+
+# Add the created IDS managed instance group into the backend service group
+gcloud compute backend-services add-backend be-dm-stamford-suricata-us-west4 \
+--instance-group=mig-dm-stamford-ids-uswest4 \
+--instance-group-zone=us-west4-a \
+--region=us-west4
+
+# Create a front end forwarding rule to act as the collection endpoint
+ gcloud compute forwarding-rules create ilb-dm-stamford-suricata-ilb-us-west4 \
+ --load-balancing-scheme=INTERNAL \
+ --backend-service be-dm-stamford-suricata-us-west4 \
+ --is-mirroring-collector \
+ --network=dm-stamford \
+ --region=us-west4 \
+ --subnet=dm-stamford-uswest4-ids \
+ --ip-protocol=TCP \
+ --ports=all
+
+----------
+# Config Package Mirror Policy
+gcloud compute packet-mirrorings create mirror-dm-stamford-web \
+--collector-ilb=ilb-dm-stamford-suricata-ilb-us-west4 \
+--network=dm-stamford \
+--mirrored-subnets=dm-stamford-uswest4 \
+--region=us-west4
+```
