@@ -205,8 +205,29 @@ gcloud services disable appengineflex.googleapis.com
 # Cloud storage
 gsutil mb gs://${BUCKET_NAME}
 
-# Copy data from other bucket
-gsutil cp gs://enron_emails/allen-p/inbox/1. .
+# Upload an object to bucket
+gsutil cp OBJECT_NAME gs://YOUR-BUCKET-NAME
+
+# Download an object from bucket
+gsutil cp -r gs://YOUR-BUCKET-NAME/ada.jpg .
+
+# Copy object to a folder
+gsutil cp gs://BUCKET-NAME/ada.jpg gs://BUCKET-NAME/folder/
+
+# List objects
+gsutil ls gs://YOUR-BUCKET-NAME
+
+# List detail
+gsutil ls -l gs://YOUR-BUCKET-NAME/ada.jpg
+
+# Update ACL for an object
+gsutil acl ch -u AllUsers:R gs://YOUR-BUCKET-NAME/ada.jpg
+
+# Remove ACL
+gsutil acl ch -d AllUsers gs://YOUR-BUCKET-NAME/ada.jpg
+
+# Remove object
+gsutil rm gs://YOUR-BUCKET-NAME/ada.jpg
 
 ```
 
