@@ -28,7 +28,7 @@ https://cloud.google.com/certification/guides/cloud-engineer
 - [x] https://www.qwiklabs.com/quests/31
 
 ### Cloud Architecture - Design, Implement, and Manage
-- [ ] https://www.qwiklabs.com/quests/47
+- [ ] https://www.qwiklabs.com/quests/124
 
 ### Cloud Development
 - [ ] https://www.qwiklabs.com/quests/67
