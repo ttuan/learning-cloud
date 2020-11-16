@@ -25,7 +25,7 @@ https://cloud.google.com/certification/guides/cloud-engineer
 - [x] https://www.qwiklabs.com/quests/37
 
 ### Networking in the Google Cloud
-- [ ] https://www.qwiklabs.com/quests/31
+- [x] https://www.qwiklabs.com/quests/31
 
 ### Cloud Architecture - Design, Implement, and Manage
 - [ ] https://www.qwiklabs.com/quests/47
