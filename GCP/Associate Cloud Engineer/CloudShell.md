@@ -477,6 +477,13 @@ kubectl get nodes --output yaml | grep -A4 addresses
 # Delete cluster
 gcloud container clusters delete private-cluster --zone us-central1-a
 
+
+# Apply a rolling update to the existing Deployment with an image update:
+kubectl set image deployment/hello-app hello-app=gcr.io/${PROJECT_ID}/hello-app:v2
+
+# Watch the running Pods running the v1 image stop, and new Pods running the v2 image start.
+watch kubectl get pods
+
 -------
 # Create a subnetwork and secondary range
 gcloud compute networks subnets create my-subnet \
