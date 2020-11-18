@@ -58,3 +58,13 @@ The Data Loss Prevention API provides programmatic access to a powerful detectio
 The DLP API provides fast, scalable classification and optional redaction for sensitive data elements like credit card numbers, names, social security numbers, passport numbers, and phone numbers. The API supports text and images – just send data to the API or specify data stored on your Cloud Storage, BigQuery, and Cloud Datastore instances.
 
 In this lab you will set up the Data Loss Prevention API and and use the API to inspect a string of data for sensitive information.
+
+# Kubernetes
+
+Deployments - a replicated, stateless application on your cluster
+
+Pods - the smallest deployable unit in Kubernetes
+
+Services - allow your application to receive traffic
+
+Autoscaling pods - scale the application based on load or custom metrics
