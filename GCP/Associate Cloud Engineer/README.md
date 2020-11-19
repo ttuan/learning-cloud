@@ -31,7 +31,7 @@ https://cloud.google.com/certification/guides/cloud-engineer
 - [x] https://www.qwiklabs.com/quests/124
 
 ### Cloud Development
-- [ ] https://www.qwiklabs.com/quests/67
+- [x] https://www.qwiklabs.com/quests/67
 
 
 ## II. Course
