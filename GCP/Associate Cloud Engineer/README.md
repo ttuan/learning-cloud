@@ -34,12 +34,15 @@ https://cloud.google.com/certification/guides/cloud-engineer
 - [x] https://www.qwiklabs.com/quests/67
 
 
-## II. Course
+## II. Courses
 - [Google Cloud Certified Professional Cloud Architect (LA)](https://linuxacademy.com/cp/modules/view/id/321)
 - [Google Certified Associate Cloud Engineer 2020](https://linuxacademy.com/cp/modules/view/id/791)
 
+## III. Books
+- [Official Google Cloud Certified Associate Cloud Engineer Study Guide](https://www.amazon.com/Google-Cloud-Certified-Associate-Engineer/dp/1119564417)
 
-## III. Others
+
+## IV. Others
 - [A Vuong's Schedule](https://link.sun-asterisk.vn/qL1qIh)
 - [Google Cloud Docs](https://cloud.google.com/docs)
 - [Google Cloud Solution](https://cloud.google.com/solutions/)
