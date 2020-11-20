@@ -231,7 +231,126 @@ Create a Stackdriver Workspaces.
 
 Stackdriver is a set of services for monitoring, logging, tracing, and debugging applications and resources
 
-## Chapter 4. Introduction of COmputing in Google Cloud
+## Chapter 4. Introduction to Computing in Google Cloud
+### Compute Engine
+Compute Engine is a service that provides VMs - *instance*. When you use Compute Engine, you create and manage one or more instances.
+#### 1. Virtual Machine Images
+Instances run images, which contain operating systems, libraries, and other code. If there is no public image that meets your needs, you can create a custom image from a boot disk or by starting with another image. After that, you can create a snapshot.
+
+Custom images are especially useful if you have to configure an operating system and install additional software on each instance of a VM that you run.
+
+Useful when we want to config system, install additional software. Install 1, start VM with this image in boosting.
+#### 2. Virtual Machines Are Contained in Projects
+When you create an instance, you specify a project to contain the instance.
+#### 3. Virtual Machines Run in a Zone and Region
+You specify a region and a zone when you create a VM.
+
+When we select zone for our VMs, consider:
+
+* Cost, which can vary between regions.
+* Data locality regulations: Put VMs near your customer
+* High availability: Put VMs in multiple zones/region
+* Latency
+* Need for specific hardware platforms, which can vary by region.
+
+#### 4. Users Need Privileges to Create Virtual Machines
+Users can be associated with projects as follows: Individual users, A Google group, A G-Suite domain, A service account
+
+* **Compute Engine Admin**:full control over Compute Engine instances.
+* **Compute Engine Network Admin**: create, modify, and delete most networking resources,read-only access to firewall rules and SSL certifications, does not give the user permission to create or alter instances.
+* **Compute Engine Security Admin**: create, modify, and delete SSL certificates and firewall rules.
+* **Compute Engine Viewer** get and list Compute Engine resources but cannot read data from those resources.
+
+We could grant permissions is to attach IAM policies directly to resources. (A for VM1 and B for VM2)
+#### 5. Preemptible Virtual Machines
+Preemptible VMs are short-lived compute instances suitable for running certain types of workloads— particularly for applications that perform financial modeling, rendering, big data, continuous integration, and web crawling operations. persist for up to 24 hours. help reduce cost
+
+Limitation:
+
+* May terminate at any time. If they terminate within 10 minutes of starting, you will not be charged for that time.
+* Will be terminated within 24 hours.
+* May not always be available. Availability may vary across zones and regions.
+* Cannot migrate to a regular VM.
+* Cannot be set to automatically restart.
+* Are not covered by any service level agreement (SLA).
+#### 6. Custom Machine Types
+Compute Engine has more than 25 predefined machine types grouped into standard types, high-memory machines, high-CPU machines, shared core type, and memory-optimized machines.
+
+You can create a custom Machine Type. It can have between 1 and 64 vCPUs and up to 6.5GB of memory per vCPU. The price of a custom configuration is based on the number of vCPUs and the memory allocated.
+
+#### 7. Use Cases for Compute Engine Virtual Machines
+Use when you need maximum control over VM instances:
+
+* Choose the specific image to run on the instance.
+* Install software packages or custom libraries.
+* Have fine-grained control over which users have permissions on the instance.
+* Have control over SSL certificates and firewall rules for the instance
+
+=> We need config to choose image, number of CPUs, memory, storage, network,...  The more control over a resource you have in GCP, the more responsibility you have to configure and manage the resource.
+
+### App Engine
+App Engine is a PaaS compute service that provides a managed platform for running appli- cations, allow us focus on application rather config VMs
+#### 1. Structure of an App Engine Application
+Have a common structure, and they consist of services, have versions, allow multiple versions run at one time. Each version of a service runs on an instance that is managed by App Engine.
+
+The number of instances depends on **your configuration** for the application and the **current load** on the application.
+
+Add instances to meet the need, and shut down when traffic decrease => **dynamic instances**.
+
+App Engine also provides **resident instances**. These instances run continually. You can add or remove resident instances manually.
+
+To estimate cost of running instance, GCP allow setup daily spending limits as well as create budgets and set alarms.
+#### 2. App Engine Standard and Flexible Environments
+* **App Engine Standard Environment**:
+	* consists of a precon- figured, language-specific runtime.
+	* Support for Java 8, Python 3.7, PHP 7.2, Nodejs 8, Go 1.11
+* **App Engine Flexible Environment**:
+	* Have no language and customization constraints.
+	* Uses containers as the basic building block abstraction. Can customize by container configuration.
+	* Quite same Kubernetes, but App Engine flexible env provide fully managed PaaS and is a good option when you can package your application and services into a small set of containers, can be autoscales. Kubernetes needs more configuration and monitoring by yourself.
+
+#### 3. Use Cases for App Engine
+* Good choice for a computing platform when you have little need to configure and control the underlying operating system or storage system.
+* The App Engine standard environment is designed for applications written in one of the supported languages.
+* The App Engine flexible environment is well suited for applications that can be decomposed into services and where each service can be containerized. If you need to install additional software or run com- mands during startup, you can specify those in the Dockerfile.
+
+### Kubernetes Engine
+Kubernetes is an open source tool created by Google for administering clusters of virtual and bare-metal machines. Kubernetes is a container orchestration service that helps you: Create cluster, deploy app, administer the cluster, specify policies and monitor cluster health.
+
+Kubernetes ~ *instance group* of Compute Engine?
+#### 1. Kubernetes Functionality
+* Load balancing across Compute Engine VMs that are deployed in a Kubernetes cluster
+* Automatic scaling of nodes (VMs) in the cluster
+* Automatic upgrading of cluster software as needed
+* Node monitoring and health repair
+* Logging
+* Support for node pools, which are collections of nodes all with the same configuration
+
+#### 2. Kubernetes Cluster Architecture
+A cluster master node and one or more worker nodes ~ *master* and *nodes*
+
+The master determines what containers and workloads are run on each node.
+
+Nodes are Compute Engine VMs. Kubernetes deploys containers in groups called *pods*. Containers within a single pod share storage and network resources. Containers within a pod share an IP address and port space. A pod is a logically single unit for providing a service.
+
+#### 3. Kubernetes High Availability
+* First way: *eviction policies* that set thresholds for resources. When they meet thresholds -> start shutting down pods
+
+* Second way: multiple identical pods. Group of running identical pods are *deployments*. Identical pods as *replicas*
+
+#### 4. Kubernetes Engine Use Cases
+A good choice for large-scale applications that require high availabil- ity and high reliability.
+
+For example: If you have a set of services that support a user interface, another set that implements business logic, and a third set that provides backend services. Each of these different groups of services can have different lifecycles and scalability requirements
+### Cloud Functions
+A serverless computing platform designed to run single-purpose pieces of code in response to events in the GCP environment.
+
+#### 1. Cloud Functions Execution Environment
+* The functions execute in a secure, isolated execution environment.
+* Compute resources scale as needed to run as many instances of Cloud Functions as needed without you having to do anything to control scaling.
+* The execution of one function is independent of all others. The lifecycles of Cloud Functions are not dependent on each other. => stateless
+#### 2. Cloud Functions Use Cases
+Suited to short-running, event-based processing.
 
 ## Chapter 5. Computing with Compute Engine Virtual Machines
 
