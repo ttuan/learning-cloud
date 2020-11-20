@@ -52,9 +52,6 @@ Need to control IP addresses, internal & external IP, firewall rules, peering VP
 #### 2. Pay-as-You-Go-for-What-You-Use Model
 #### 3. Elastic Resource Allocation
 
-
-
-
 ## Chapter 2. Google Cloud Computing Services
 ### Computing Components of Google Cloud Platform
 + Computing resources
@@ -162,7 +159,77 @@ GCP’s Cloud Identity and Access Management (IAM) service enables customers to 
 * Cloud Natureal Language Processing: analyze human languages and extracting information from text
 * CLoud Vision: Analysis images with metadata, text, filtering content.
 
-## Chapter 3. Projects, Service Accounts and Billing
+## Chapter 3. Projects, Service Accounts, and Billing
+
+### How GCP Organizes Projects and Accounts
+GCP provides a way to group resources and manage them as a single unit. This is called the *resource hierarchy*. The access to resources in the resource hierarchy is controlled by a set of **policies** that you can define.
+#### 1. GCP Resource Hierarchy
+* Organization
+	- Is the root of the resource hierarchy. ~ company/ organization.
+	- Use G-suite domains + Cloud Identity account.
+	- Have super admins and they will assign role to other users (Organization Administrator IAM role)
+* Folder
+	- The building blocks of multilayer organizational hierarchies.
+	- May contain both folder and project
+* Project
+	- It is in projects that we create resources, use GCP services, manage permissions, and manage billing options.
+
+#### 2. Organization Policies
+-  Organization Policy Service: controls access to an organi- zation’s resources.
+-  IAM specifies who can do things, and the Organization Policy Service specifies what can be done with resources.
+
+* Contraints on Resources
+	- Constraints are restrictions on services
+	- **List constraints** are lists of values that are allowed or disallowed for a resource.
+	- **Boolean constrains** evaluate to true or false and determine whether the constraint is applied or not.
+
+* Policy Evaluation
+	- Policies are managed through the Organization Policies form in the IAM & admin form
+	- Multiple policies can be in effect for a folder or project.
+
+### Roles and Identities
+#### 1. Roles in GCP
+- A role is a collection of permissions. Roles are granted to users by binding a user to a role. **Identities** - human user or service account.
+- There are 3 types of roles:
+	- Primitive roles: Owner, Editor and Viewer
+	- Predefined roles
+	- Custom roles
+
+- Need to follow *principle of least privilege*
+- Custom roles are assembled using permissions defined in IAM.
+
+#### 2. Granting Roles to Identities
+- Use Console to granting role
+
+### Service Accounts
+- Identities associated with individual users. Sometimes it helpful have appliation or VMs act on behalf of a user or perform operations that the user does not have permission to perform.
+- 2 types of service accounts, user-managed service accounts and Google- managed service accounts.
+
+### Billing
+Using resources such as VMs, object storage, and specialized services usually incurs charges.
+#### 1. Billing Accounts
+
+Billing accounts store information about how to pay charges for resources used. A billing account is associated with one or more projects. All projects must have a billing account unless they use only free services.
+
+* two types of billing accounts: self-serve and invoiced. Self-serve accounts are paid by credit card or direct debit from a bank account. The other type is an invoiced billing account, in which bills or invoices are sent to customers.
+
+* Billing roles:
+	* Billing Account Creator, which can create new self-service billing accounts
+	* Billing Account Administrator, which manages billing accounts but cannot create them.
+	* Billing Account User, which enables a user to link projects to billing accounts
+	* Billing Account Viewer, which enables a user to view billing account cost and transactions
+
+#### 2. Billing Budgets and Alerts
+Defining a budget and setting billing alerts.
+
+One or more projects can be linked to a billing account, so the budget and alerts you specify should be based on what you expect to spend for all projects linked to the billing account.
+#### 3. Exporting Billing Data
+Can use Billing Export or BigQuery
+
+### Provisioning Stackdriver Workspaces
+Create a Stackdriver Workspaces.
+
+Stackdriver is a set of services for monitoring, logging, tracing, and debugging applications and resources
 
 ## Chapter 4. Introduction of COmputing in Google Cloud
 
