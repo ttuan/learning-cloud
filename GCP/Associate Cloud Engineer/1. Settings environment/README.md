@@ -3,6 +3,8 @@
 ## 1. Creating projects
 - [Platform Overview](./Platform-Overview.md)
 - [Best Practices For Enterprise Organization](./Best-Practice-For-Enterprise-Org.md)
+- [Official Study Guide - Overview of GCP](../Official-Google-Cloud-Certificate.md#chapter-1-overview-of-gcp)
+
 ## 2. Assigning users to predefined IAM roles within a project
 - [IAM](./IAM.md)
 
