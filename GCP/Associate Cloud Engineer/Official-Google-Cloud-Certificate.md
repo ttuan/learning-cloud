@@ -353,6 +353,54 @@ A serverless computing platform designed to run single-purpose pieces of code in
 Suited to short-running, event-based processing.
 
 ## Chapter 5. Computing with Compute Engine Virtual Machines
+### Creating and Configuring Virtual Machines with the Console
+Need to enable Billing
+#### 1. Main Virtual Machine Configuration Details
++ Name, Region and zone, Machine type (CPUs/Memory), Boot disk (OS), Service Account
+
+#### 2. Additional Configuration Details
+* Management Tab:
+	* Label: key-value, help to understand how VM is used.
+	* Deletion protection
+	* Startup script
+	* Metadata (maybe `startup-script-url`)
+	* Availability Policy: Preemptibility, Automatic restart, On host maintenance
+* Security Tab:
+	* Shielded VMs: Secure Boot, Virtual Trusted Platform Module, Integrity Monitoring
+	* SSH Key
+* Disk:
+	* Boot Disk: Config delete boot disk when instance is deleted.
+	* Encryption data: by Google/Customer-managed key/Customer supplied
+* Networking:
+	* Network tags (Can assign tags, firewall will work with this tag)
+	* Network interface
+* Sole Tenancy tab:
+	* Allows you to specify labels regarding sole tenancy for the server (???)
+
+### Creating and Configuring Virtual Machines with Cloud SDK
+
+### Basic Virtual Machine Management
+#### 1. Starting and Stopping Instances
+`gcloud compute instances stop INSTANCE-NAME`
+#### 2. Network Access to Virtual Machines
+Use `SSH` or `RDP`
+#### 3. Monitoring a Virtual Machine
+View in Console Instance detail page
+#### 4. Cost of Virtual Machines
+* VMs are billed in 1-second increments.
+* The cost is based on machine type. The more CPUs and memory used, the higher the cost.
+* Google offers discounts for sustained usage.
+* VMs are charged for a minimum of 1 minute of use.
+* Preemptible VMs can save you up to 80 percent of the cost of a VM.
+
+### Guidelines for Planning, Deploying, and Managing Virtual
+* Choose a machine type with the fewest CPUs and the smallest amount of memory that still meets your requirements, including peak capacity. This will minimize the cost of the VM.
+* Use the console for ad hoc administration of VMs. Use scripts with gcloud commands for tasks that will be repeated.
+* Use startup scripts to perform software updates and other tasks that should be per- formed on startup.
+* If you make many modifications to a machine image, consider saving it and using it with new instances rather than running the same set of modifications on every new instance.
+* If you can tolerate unplanned disruptions, use preemptible VMs to reduce cost.
+* Use SSH or RDP to access a VM to perform operating system–level tasks.
+* Use Cloud Console, Cloud Shell, or Cloud SDK to perform VM-level tasks.
 
 ## Chapter 6. Managing Virtual Machines
 
