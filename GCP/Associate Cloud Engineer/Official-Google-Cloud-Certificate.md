@@ -403,6 +403,88 @@ View in Console Instance detail page
 * Use Cloud Console, Cloud Shell, or Cloud SDK to perform VM-level tasks.
 
 ## Chapter 6. Managing Virtual Machines
+### Managing Single Virtual Machine Instances
+**Single instance** - one created by itself and not in an instance group or other type of cluster.
+#### 1. Managing Single Virtual Machine Instances in the Console
+* Starting, Stopping, and Deleting Instances
+	* Reset command restarts a VM. The properties of the VM will not change, but data in memory will be lost. If you want to keep data, just save it on persistent disk or Cloud Storage.
+* Viewing Virtual Machine Inventory
+	* We can filter by instance name, label, internal ip, external ip, status, zone, network, ..
+* Attaching GPUs to an Instance:
+	* Start instance in which GPU libraries have been installed or will be installed. (Choose boot disk)
+	* Must also verify that the instance will run in a zone that has GPUs available.
+	* Custom Machine type, config number of GPUs to attach
+	*  The CPU must be compatible with the GPU selected. GPUs cannot be attached to shared memory machines.
+	*  If you add GPUs, you must set the instance to terminate during maintenance.
+* Working with Snapshots:
+	* Snapshots are copies of data on a persistent disk.
+	* If you are running a database or other application that may buffer data in memory before writing to disk, be sure to flush disk buffers before you create the snapshot; other- wise, data in memory that should be written to disk may be lost
+	* Need **Compute Storage Admin role**
+* Working with Images:
+	* Similar to snapshots in that they are copies of disk contents. The difference is that snapshots are used to make data available on a disk, while images are used to create VMs.
+	* Can create from Disk, Snapshot, Cloud storage file, Another image.
+	* Delete removes the image, while Deprecated marks the image as no longer supported and allows you to specify a replacement image to use going forward.
+
+#### 2. Managing a Single Virtual Machine Instance with Cloud Shell and the Command Line
+* Gcloud global flags: `--account`, `--configuration`, `--flatten`, `--format`, `--help`, `--project`, `--quiet`, `--verbosity` (debug/warning/info/error)
+
+```sh
+# Start instance
+gcloud compute instances start INSTANCE_NAMES --async --zone us-central1-c
+
+# Stop instances
+gcloud compute instances stop INSTANCE_NAMES
+
+# Delete instances
+gcloud compute instances delete INSTANCE_NAMES --zone us-central2-b (may be add option --keep-disks=all  | --delete-disks=data)
+
+# View VM inventory
+gcloud compute instances list --filter="zone:ZONE" (--sort-by | --limit)
+
+# Create Snapshot of a disk
+gcloud compute disks snapshot DISK_NAME --snapshot-names=NAME
+gcloud compute snapshots describe SNAPSHOT_NAME
+
+# To create a disk
+gcloud compute disks create DISK_NAME --source-snapshot=SNAPSHOT_NAME --size=100 --type=pd-standard
+
+# Create Image
+gcloud compute images create IMAGE_NAME (--source-disk | --source-image | --source-image-family | --source-snapshot | --source-uri | --description | --labels)
+gcloud compute images delete IMAGE_NAME
+
+# Export to Cloud storage
+gcloud compute images export --destination-uri DESTINATION_URI --image IMAGE_NAME
+```
+
+### Introduction to Instance Groups
+* **Managed groups** consist of groups of identical VMs, are created using an instance template, can automatically scale the number of instances in a group and be used with load balancing to distribute workloads
+* **Unmanaged groups** should be used only when you need to work with different configu- rations within different VMs within the group.
+#### 1. Creating and Removing Instance Groups and Templates
+
+```sh
+# Create instance template
+gcloud compute instance-templates create INSTANCE
+gcloud compute instance-templates create ch06-instance-template-1 --source- instance=ch06-instance-1
+
+# Delete instance template
+gcloud compute instance-templates delete NAME
+
+# Delete instance group
+gcloud compute instance-groups managed delete-instances NAME
+
+gcloud compute instance-templates list
+gcloud compute instance-groups managed list-instances
+gcloud compute instance-groups managed list-instances INSTANCE-GROUP-NAME
+```
+#### 2. Instance Groups Load Balancing and Autoscaling
+Managed instance groups can be configured to autoscale with policy to trigger adding or removing instances based on CPU utilization, monitoring metric, load-balancing capacity, or queue-based workloads.
+### Guidelines for Managing Virtual Machines
+* Use labels and descriptions. This will help you identify the purpose of an instance and also help when filtering lists of instances.
+* Use managed instance groups to enable autoscaling and load balancing. These are key
+to deploying scalable and highly available services.
+* Use GPUs for numeric-intensive processing, such as machine learning and high-performance computing. For some applications, GPUs can give greater performance benefit than adding another CPU.
+* Use snapshots to save the state of a disk or to make copies. These can be saved in Cloud Storage and act as backups.
+* Use preemptible instances for workloads that can tolerate disruption. This will reduce the cost of the instance by up to 80 percent.
 
 ## Chapter 7. Computing with Kubernetes
 
