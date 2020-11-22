@@ -487,6 +487,73 @@ to deploying scalable and highly available services.
 * Use preemptible instances for workloads that can tolerate disruption. This will reduce the cost of the instance by up to 80 percent.
 
 ## Chapter 7. Computing with Kubernetes
+### Introduction to Kubernetes Engine
+Kubernetes Engine is GCP managed Kubernetes service, for creating + maintaining Kubernetes cluster without having to manage Kubernetes platform.
+
+Kubernetes runs containers on a cluster of VMs: where to run, monitors the health, and manages lifecycle of VM instances. This collection of tasks is known as *container orchestration*.
+
+Instance group is quite similar, but more restricted. All instances run the same image and it has no mechanism to support the deployment of containers.
+
+Keep in mind: when you use Kubernetes Engine, you will **manage Kubernetes** and **your applications** and **workloads running in containers** on the Kubernetes platform.
+
+#### 1. Kubernetes Cluster Architecture
++ Cluster master and one or more nodes. Cluster master can be replicated and distributed for high-availability and fault tolerance.
++ The cluster master manages services: Kubernetes API, controllers, and schedulers.
++ Nodes are VMs that run containers configured to run an application. The nodes run an agent called **kubelet**, which is the service that communicates with the cluster master.
+
+![](https://platform9.com/wp-content/uploads/2019/05/kubernetes-constructs-concepts-architecture.jpg)
+
+#### 2. Kubernetes Objects
+* **Pods**:
+	* Pods are single instances of a running process in a cluster. Pods contain at least one container.
+	* Each pod gets a unique IP address and a set of ports. Containers connect to a port.
+	* A pod allows its containers to behave as if they are running on an isolated VM, sharing common storage, one IP address, and a set of ports. => can deploy multiple instance of the same application, or different instances of different applica- tions on the same node or different nodes
+	* Pods support autoscaling. The mechanism that manages scaling and health monitoring is known as a **controller**.
+	* Quite same Compute Engine manage instance group. But Pods is manage automaticly by controller, and it excutes application on containers.
+	* **Pods are ephemeral and can be terminated by a controller**.
+
+* **Services**:
+	* Cause pods are ephemeral => We can't depend on Pods to comunicate with applications (EX: Pods IP Address)
+	* K8s provides a level of indirection between applications running in pods and other applications: *service* - provide API endpoints
+* **ReplicaSet**:
+	* A ReplicaSet is a controller used by a deployment that ensures the correct number identical of pods are running. (detect enough pods running for an application, and create/delete)
+* **Deployment**:
+	* Deployments are sets of identical pods, running same application, which are created using the same pod template.
+	* A pod template is a definition of how to run a pod - *pod specification*
+	* Suited to stateless applications
+* **StatefulSet**:
+	* StatefulSets are like deployments, but they assign unique identifiers to pods.
+	* Used when an application needs a unique network identifier or stable persistent storage.
+* **Job**:
+	* A job is an abstraction about a workload.
+	* Job specifications are specified in a configuration file and include specifications about the container to use and what command to run.
+
+### Deploying Kubernetes Clusters
+#### 1. Deploying Kubernetes Clusters Using Cloud Console
+#### 2. Deploying Kubernetes Clusters Using Cloud Shell and Cloud SDK
+
+```sh
+gcloud beta container
+
+gcloud beta container --project "ferrous-depth-220417" clusters create "standard-cluster-2" --zone "us-central1-a" --username "admin"
+--cluster-version "1.9.7-gke.6" --machine-type "n1-standard-1"
+--image-type "COS" --disk-type "pd-standard" --disk-size "100" --scopes "https://www.googleapis.com/auth/compute","https://www.googleapis.com/auth/ devstorage.read_only","https://www.googleapis.com/auth/logging.write", "https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/ servicecontrol","https://www.googleapis.com/auth/service.management.readonly", "https://www.googleapis.com/auth/trace.append" --num-nodes "3" --enable-cloud-logging --enable-cloud-monitoring --network "projects/ferrous-depth-220417/ global/networks/default" --subnetwork "projects/ferrous-depth-220417/regions/ us-central1/subnetworks/default" --addons HorizontalPodAutoscaling, HttpLoadBalancing,KubernetesDashboard --enable-autoupgrade --enable-autorepair
+```
+
+### Deploying Application Pods
+* Create a deployment: Container image, Environment variables, Initial command,Application name, Labels, Namespace, Cluster to deploy to
+
+```sh
+gcloud components install kubectl
+
+# Run Docker image on a cluster
+kubectl run ch07-app-deploy --image=ch07-app --port=8080
+
+# Scale up
+kubectl scale deployment ch07-app-deploy --replicas=5
+```
+### Monitoring Kubernetes
+Enable Stackdriver monitoring and logging and send notifications.
 
 ## Chapter 8. Managing Kubernetes Clusters
 
