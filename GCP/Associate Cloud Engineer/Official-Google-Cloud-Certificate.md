@@ -555,7 +555,100 @@ kubectl scale deployment ch07-app-deploy --replicas=5
 ### Monitoring Kubernetes
 Enable Stackdriver monitoring and logging and send notifications.
 
-## Chapter 8. Managing Kubernetes Clusters
+## Chapter 8. Manage Kubernetes Clusters
+
+
+### Viewing the Status of a Kubernetes Cluster
+#### 1. View on console
+* Detail
+	* The Add-ons section displays the status of optional add-on features of a cluster. The Permissions section shows which GCP service APIs are enabled for the cluster.
+	* Node pools, which are separate instance groups running in a Kubernetes clusters.
+* Storage
+	* Cluster does not have persistent volumes but uses standard storage.
+* Nodes
+
+#### 2. Cloud Shell
+* Use `gcloud` command for getting status of cluster
+* Use `kubectl` command for getting info about Kubernetes managed objects (nodes, pods, containers)
+
+```sh
+# List name and basic info of all clusters
+gcloud container clusters list
+
+# View detail of a cluster
+gcloud container clusters describe --zone us-central1-a standard-cluster-1
+
+# Get kubeconfig content to connect with Kubernetes API
+gcloud container clusters get-credentials --zone us-central1-a standard-cluster-1
+
+# Get nodes/pods
+kubectl get nodes
+kubectl get pods
+kubectl describe nodes
+kubectl describe pods
+```
+
+
+Fun fact: "You might expect the Kubernetes Engine commands to start with `gcloud kubernetes`, but the service was originally called Google Container Engine. In November 2017, Google renamed the service Kubernetes Engine, but the gcloud commands remained the same."
+
+### Adding, Modifying, and Removing Nodes
+
+```sh
+# Add or modify nodes - Change size to 5
+gcloud container clusters resize standard-cluster-1 --node-pool default-pool --size 5 --region=us-central1
+
+# Modify cluster, update autoscaling
+gcloud container clusters update standard-cluster-1 --enable-autoscaling --min-nodes 1 \
+--max-nodes 5 --zone us-central1-a --node-pool default-pool
+
+```
+
+### Adding, Modifying, and Removing Pods
+It is considered a best practice to not manipulate pods directly. Kubernetes will maintain the number of pods specified for a deployment. If you would like to change the number of pods, you should change the deployment configuration.
+
+Pods are managed through deployments. A deployment includes a configuration parameter called *replicas*, which are the number of pods running the application specified in the deployment.
+
+```sh
+# List deployments
+kubectl get deployments
+
+# Change the replicas to 5
+kubectl scale deployment nginx-1 --replicas 5
+
+# Autoscale: add or remove pods as needed to meet demand based on CPU utilization
+kubectl autoscale deployment nginx-1 --max 10 --min 1 --cpu-percent 80
+
+# Remove a deployment
+kubectl delete deployment nginx-1
+```
+
+### Adding, Modifying, and Removing Services
+Services are added through deployments.
+
+```sh
+# Kuber list services
+kubectl get services
+
+# Kuber add service
+kubectl run hello-server --image=gcr.io/google/samples/hello-app:1.0 --port 8080
+
+# Service need to expose port, use this command
+kubectl expose deployment hello-server --type="LoadBalancer"
+
+# Delete service
+kubectl delete service hello-server
+```
+### Viewing the Image Repository and Image Details
+
+```sh
+# View list images in registry
+gcloud container images list
+
+gcloud container images list --repository gcr.io/google-containers
+
+# View image detail
+gcloud container images describe gcr.io/appengflex-project-1/nginx
+```
 
 ## Chapter 9. Computing with App Engine
 
