@@ -651,6 +651,48 @@ gcloud container images describe gcr.io/appengflex-project-1/nginx
 ```
 
 ## Chapter 9. Computing with App Engine
+### App Engine Components
+* App Engine Standard applications consist of four components:
+	* Application
+	* Service
+	* Version
+	* Instance
+* All resources associated will be created in the same region with application.
+* App have multiple services, Services can have multiple versions. When a version executes, it creates an instance of the app.
+* Services are defined by their source code and their configuration file. The combination of those files constitutes a version of the app. => easy for rolling back, easy for spliting traffic.
+
+![](https://cloud.google.com/appengine/docs/images/modules_hierarchy.svg?hl=zh-cn)
+
+### Deploying an App Engine Application
+
+```sh
+gcloud app deploy app.yml
+
+# Addition options: --version - specific version; --project, --no-promote - Deploy app without routing traffic to it
+
+# Stop serving versions
+gcloud app versions stop v1 v2
+
+```
+### Scaling App Engine Applications
+* `dynamic` instances and `resident` instances.
+* To specify automatic scaling, add config options: `target_cpu_utilization`, `target_throughput_utilization`, `max_concurrent_requests`, `max_instances`, `min_instances`, `max_pending_latency`, `min_pending_latency`.
+* Basic scaling: `idle_timeout` and `max_instances`.
+* Manual scaling: `manual_scaling: instances: 7`
+
+### Splitting Traffic between App Engine Versions
+* If you have more than one version of an application running, you can split traffic between the versions
+* Three ways to split traffic:
+	* IP address: splitting provides some stickiness, so a client is always routed to the same split
+	* HTTP cookie: useful when you want to assign users to versions (request header: `GOOGAPPUID`)
+	* Random Selection: useful when you want to evenly distribute workload.
+
+```sh
+# Command to split traffic
+# --migrate: should migrate traffic from pervious version to new version
+# --split-by specifies how to split traffic using either IP or cookies: ip, cookie or random.
+gcloud app services set-traffic serv1 --splits v1=.4,v2=.6
+```
 
 ## Chapter 10. Computing with Cloud Functions
 
