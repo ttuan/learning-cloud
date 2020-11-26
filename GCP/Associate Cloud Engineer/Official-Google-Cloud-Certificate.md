@@ -695,6 +695,63 @@ gcloud app services set-traffic serv1 --splits v1=.4,v2=.6
 ```
 
 ## Chapter 10. Computing with Cloud Functions
+### Introduction to Cloud Functions
+Cloud Functions is a **serverless** compute service provided by Google Cloud Platform (GCP).
+
+App Engine supports multiple services organized into a single application, while Cloud Functions supports individual services that are managed and operate independently of other services.
+
+Cloud Functions allows developers to decouple the initial data quality check from the rest of the extraction, transformation, and load process.
+#### 1. Events, Triggers, and Functions
+* **Events** are a particular action that happens in Google Cloud
+	* Cloud Storage Cloud: uploading, deleting, and archiving a file.
+	* Pub/Sub: an event for publishing a message
+	* HTTP type of event allows developers to invoke a function by making an HTTP request using POST, GET, PUT, DELETE, and OPTIONS calls.
+	* Firebase: actions taken in the Firebase database, such as database triggers, remote configuration triggers, and authentication triggers.
+	* Stackdriver Logging: a change
+
+* A **trigger** is a way of responding to an event.
+* The **function** is passed arguments with data about the event.
+#### 2. Runtime Environments
+* Functions run **in their own environment**. (separate instance). We can't share information between invocation of functions. If we wanna keep data, just use database (Cloud Datastore/ file in Cloud Storage)
+* Support Python 3, Node 6, Node 8
+### Cloud Functions Receiving Events from Cloud Storage
+* Function name
+* Memory allocated for the function - from 128MB to 2GB (default 256MB)
+* Trigger
+* Event type
+* Source of the function code
+* Runtime
+* Source code
+* Python, Go or Node.js function to execute
+
+
+`gcloud function deploy` need: runtime, trigger-resource, trigger-event.
+
+trigger-event (google.storage.object.finalize, google.storage.object.delete, google.storage.object.archive, google.storage.object.metadataUpdate)
+
+```sh
+gcloud functions deploy FUNCTION_NAME --runtime python37 --trigger-resource BUCKET_NAME --trigger-event EVENT_NAME
+
+gcloud functions delete cloud_storage_function_test
+```
+### Cloud Functions Receiving Events from Pub/Sub
+Parameter:
+
+* Cloud function name
+* Memory allocated for the function
+* Trigger
+* Topic
+* Source of the function code
+* Runtime
+* Source code
+* Name of the Python or Node.js function to execute
+
+```sh
+gcloud functions deploy pub_sub_function_test --runtime python37 --trigger-topic gcp-ace-exam-test-topic
+```
+
+Timeout of a Cloud Function is 1 minutes by default. You can add option `timeout` to command, max to 9 minutes.
+
 
 ## Chapter 11. Planning Storage in the Cloud
 
