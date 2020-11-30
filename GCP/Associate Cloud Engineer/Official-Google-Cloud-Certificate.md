@@ -754,6 +754,113 @@ Timeout of a Cloud Function is 1 minutes by default. You can add option `timeout
 
 
 ## Chapter 11. Planning Storage in the Cloud
+* Time to access data
+* Data model
+* Consistency, Availability and Support for transactions
+
+### Types of Storage Systems
+* **Latency**: Nanosecond (10^-9 second), Microsecond (10^-6 second), Millisecond (10^-3 second)
+* **Persistency**: time for storing data
+
+#### 1. Cache
+* An in-memory data store designed to provide applications with sub millisecond access to data. Data will be lost when machine hosting shuts down.
+
+* MemoryStore:
+	* Redis service (Memorystore is protocol-compatible with Redis)
+	* Instance redis has 1GB - 300GB memory.
+	* To config, we need: instance ID, a display name, and a Redis version.
+
+#### 2. Persistent Storage
+* Persistent disks provide durable block storage, can be attached to VMs (GCE / GKE)
+* Persistent disks are not directly attached to physical servers hosting your VMs but are network accessible.
+The data continues to exist after VMs are shut down and terminated.
+* Locally attached SSD, data store will be lost when VMs shut down.
+
+Features of Persistent Disks:
+
+- SSD: High throughtput, high performance (both random access & sequential access) - Via network (30 read and write IOPS/gigabyte); Locally attached: read IOPS: 266-453, write IOPS: 186-240
+- HDD: cost less. Good for storing large amounts of data/ store less sensitive.
+- Can be mounted on multiple VMs
+- Can be resize up to 64TB.
+- Automatically encrypt data.
+
+#### 3. Object Storage
+- Store large volumes of data and share it widely.
+
+Features of Cloud Storage
+
+- An object storage system, which means files are treated as atomic units (smallest unit) - can not operate on part of a file
+- Does not support concurrency and locking. If multiple clients are writing to a file, last data written to file is stored.
+- Bucket name must be globally unique.
+- Does not provide a file system. GG support a project called Cloud Storage Fuse, allow mount a bucket as a file system.
+
+Classes of object storage:
+
+* Multiregional and Regional Storage:
+	* Multiregional buckets: 99.99% monthly availability with a 99.95 percent availability service level agreement (SLA). Use for ensure acceptable times to access content.
+	* Regional buckets have a 99.99 percent typical monthly availability and a 99.9 per- cent availability SLA.
+
+=> Used for frequently used data. (once/month)
+We should choose regional and multiregional based on the location of your users. If users are globally and require access to sync data -> choose performance and availability.
+
+**Once a bucket is created as either regional or multiregional, it can not be changed to the other**
+
+* Nearline and Coldline Storage:
+	* Nearline: access files less than once per month. 99.95 percent typical monthly availability in multiregional loca- tions and a 99.9 percent typical availability in regional locations.
+	* Coldline: Acess once per year or less. 99.95 percent typical monthly availability in multiregional locations and a 99.9 percent typical availability in regional locations.
+	* GG support retrieval price. Nearline storage: minimum 30-day. Coldline: minimum 90-days
+	* Price include: storage charge and access charges.
+
+* Versioning and Object Lifecycle Management:
+	* A copy of an object is archived each time the object is overwritten or when it is deleted.
+	* Lifecycle policy: allow auto change an object storage class, or delete object after a specified period. Rules include a condition and an action. Apply on bucket.
+	* Delete object -> archived object. Delete artichived object -> permanently deleted.
+
+* Configure:
+	* Bucket name, storage class. Set a retention policy to prevent changes to files/deleteing file before the time you specify.
+	* Add labels and choose Google managed keys or Customer managed keys for encryptions.
+	* Lifecycle policy: Age, Creation date, storage class, newer versions, live state. Need `condition` and `action`.
+
+#### 4. Storage Types When Planning a Storage Solution
+* `Time required to access data`:
+	* Cache: fastest, but volatile. Could save the contents of the cache to persistent storage at regular intervals.
+	* Persistent storage: block storage devices. Disk attached to VMs. (SSD or HDD)
+	* Object storage: Store large volumes of data for extended periods of time.
+* `How data is stored and accessed`.
+
+### Storage Data Models
+3 data models: Object, Relational and NoSQL.
+
+#### 1. Object: Cloud Storage
+- Suited for archived data, ML training data and old IoT data.
+
+#### 2. Relational: Cloud SQL, Cloud Spanner, and BigQuery
+- For viewing same data at same time.
+- CloudSQL/ Cloud Spanner support db transactions.
+- Cloud SQL scale vertically (run more memory/ more CPU). Cloud Spanner is used if you have large volumes of data and data needs to be globally distributed (large enterprises)
+- BigQuery is used for data warehouse and analytic applications. is not suitable for transaction-oriented app.
+
+#### 3. NoSQL: Datastore, Cloud Firestore, and Bigtable
+* Datastore Features:
+	* A document database. Key - Value pairs (entities), have properties.
+	* Auto partitions data and scales up/down as demand warrants.
+	* Does not require fixed schema/ structure and doesn't support relational operations (join tables/ ...)
+* Firestore Features:
+	* Like Datastore, but designed for storing, sync and querying data across distributed apps, like mobile apps. Can updated in close to real time.
+	* Support transactions and provides multiregional replication.
+* Bigtable Features
+	* A **wide-column database**, not document database.
+	* Designed for petabye-scale databases. both operational DB (storing **IoT** data, analytic processing, ..)
+	* Provide consistent, low-milisecond latency.
+	* Run in clusters and scales horizontally.
+
+### Choosing a Storage Solution: Guidelines to Consider
+
+* **Read and Write Patterns**: Applications which read and write data frequently => Cloud SQL if data is structured; If need global db, should use Cloud Spanner. If you writting data at consistently high rates and in large volumes, consider Bigtable. If write file and download them in their entirety, choose Cloud Storage.
+* **Consistency**: Use read data from DB will get same data, no matter which server in cluster responds. If you need **strong consistency**, Cloud SQL / Cloud Spanner are good options. Datastore is good option if data is unstructured (cause we can config Datastore for strong consistency). NoSQL db offer at least **eventual consistency**, some replicas may not be in sync for a short period of time -> can read stale data.
+* **Transaction Support**: Cloud SQL, Spanner and Datastore provide transaction support.
+* **Cost**: depend on the ammount of data stored, retrieved or scanned.
+* **Latency**: Bigtable provides consistenly low milisecond operations. Spanner can have longer latencies.
 
 ## Chapter 12. Deploying Storage in Google Cloud Platform
 
