@@ -864,6 +864,125 @@ We should choose regional and multiregional based on the location of your users.
 
 ## Chapter 12. Deploying Storage in Google Cloud Platform
 
+### Deploying and Managing Cloud SQL
+#### 1. Creating and Connecting to a MySQL Instance
+* Need instance ID, root password, region, zone to create instance
+
+```sh
+gcloud sql connect <INSTANCE_NAME> –user=<USER_NAME>
+```
+
+#### 2. Backing Up MySQL in Cloud SQL
+- Instance detail > Backup
+
+```sh
+# On-deman backups
+gcloud sql backups create ––async ––instance [INSTANCE_NAME]
+
+# Automatic backups
+gcloud sql instances patch [INSTANCE_NAME] –backup-start-time [HH:MM]
+```
+### Deploying and Managing Datastore
+
+#### 1. Adding Data to a Datastore Database
+- Need kind (like table), properties (fields) to create entities
+
+#### 2. Backing Up Datastore
+- Need `datastore.databases.export` permission for creating backups and `datastore.databases.import` for importing.
+
+```sh
+# Create Backups
+gcloud datastore export –namespaces='(default)' gs://ace_exam_backups
+
+# Import
+gcloud datastore import gs://[BUCKET]/[PATH]/[FILE].overall_export_metadata
+```
+
+### Deploying and Managing BigQuery
+BigQuery is a fully managed database service => GG take care backups
+
+#### 1. Estimating the Cost of Queries in BigQuery
+```sh
+# Estimate the cost
+# [Location] is the location in which you created the data set you are querying, and [SQL_QUERY] is the SQL query you are estimating.
+bq ––location=[LOCATION] query ––use_legacy_sql=false ––dry_run [SQL_QUERY]
+```
+
+Or we can use [The Pricing calculator]( https://cloud.google.com/products/calculator/)
+#### 2. Viewing Jobs in BigQuery
+Jobs: load, export, copy, and query data.
+
+```sh
+# Show status of jobs
+bq --location=US show -j gcpace-project:US.bquijob_119adae7_167c373d5c3
+```
+### Deploying and Managing Cloud Spanner
++ Create Spaner instances
++ Create database instances
+
+Cloud Spanner is a managed database service, so you will not have to patch, backup, or perform other basic data administration tasks. Your tasks, and those of data modelers and software engineers, will focus on design tables and queries.
+
+### Deploying and Managing Cloud Pub/Sub
+- 2 tasks: creating a topic and cre- ating a subscription.
+	* A topic is a structure where applications can send messages
+	* Applications read messages by using a subscription.
+* Subscription:
+	* Name + delivery type
+	* *pulled*: in which application reads from a topic, *pushed*: in which the sub- scription writes messages to an endpoint. pushed need an URL of an endpoint.
+* Pub/Sub will wait the period of time specified in the Acknowledgment Deadline parameter (10-600s)
+
+```sh
+gcloud pubsub topics create [TOPIC-NAME]
+gcloud pubsub subscriptions create [SUBSCRIPTION-NAME] ––topic [TOPIC-NAME]
+```
+
+### Deploying and Managing Cloud Bigtable
++ Create Bigtable cluster, set servers running Bigtable services, create tables, data, query data.
+
+```sh
+# Config
+gcloud components update
+gcloud components install cbt
+
+# Update config file
+echo instance = ace-exam-bigtable >> ~/.cbtrc
+
+cbt createtable ace-exam-bt-table
+cbt ls
+
+# Create column family
+cbt createfamily ace-exam-bt-table colfam1
+
+# Set value of the cell with col colfam1 in a row called row1
+cbt set ace-exam-bt-table row1 colfam1:col1=ace-exam-value
+
+# Display content of table
+cbt read ace-exam-bt-table
+```
+### Deploying and Managing Cloud Dataproc
+- Cloud Dataproc is Google’s managed Apache Spark and Apache Hadoop service (for bigdata). Spark (ML and analystic), Hadoop (batch, big data app)
+- Create cluster (name, region, zone, cluster mode - single mode or high avaiability mode)
+- Config for worker node (CPU, memory, machine type, ...)
+
+```sh
+gcloud dataproc clusters create cluster-bc3d ––zone us-west2-a
+
+# Submit job
+gcloud dataproc jobs submit spark ––cluster cluster-bc3d ––jar ace_exam_jar.jar
+```
+### Managing Cloud Storage
+
+```sh
+# Change storage class
+gsutil rewrite -s [STORAGE_CLASS] gs://[PATH_TO_OBJECT]
+
+# Moving between bucket
+gsutil mv gs://[SOURCE_BUCKET_NAME]/[SOURCE_OBJECT_NAME] \
+gs://[DESTINATION_BUCKET_NAME]/[DESTINATION_OBJECT_NAME]
+
+gsutil mv gs://[BUCKET_NAME]/[OLD_OBJECT_NAME] gs://[BUCKET_NAME]/ [NEW_OBJECT_NAME]
+```
+
 ## Chapter 13. Loading Data into Storage
 
 ## Chapter 14. Networking in the Cloud: Virtual Private Clouds and Virtual Private Networks
