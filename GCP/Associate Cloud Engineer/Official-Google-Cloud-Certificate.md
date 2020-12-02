@@ -985,6 +985,96 @@ gsutil mv gs://[BUCKET_NAME]/[OLD_OBJECT_NAME] gs://[BUCKET_NAME]/ [NEW_OBJECT_N
 
 ## Chapter 13. Loading Data into Storage
 
+### Loading and Moving Data to Cloud Storage
+* Creating bucket: name, storage class, location.
+* Bucket is regional resource, data will be replicated across zones in the region.
+
+```sh
+# Make bucket
+gsutil mb gs://[BUCKET_NAME]/
+
+# Copy files
+gsutil cp [LOCAL_OBJECT_LOCATION] gs://[DESTINATION_BUCKET_NAME]/
+
+# Move object
+gsutil mv gs://[SOURCE_BUCKET_NAME]/[SOURCE_OBJECT_NAME] \
+gs://[DESTINATION_BUCKET_NAME]/[DESTINATION_OBJECT_NAME]
+```
+### Importing and Exporting Data
+#### 1. Cloud SQL
+* Click Detail > Export Tab > Choose storage bucket + format (SQL/CSV)
+
+```sh
+# View detail
+gcloud sql instances describe [INSTANCE_NAME]
+
+# Change access controls on the bucket
+gsutil acl ch -u [SERVICE_ACCOUNT_ADDRESS]:W gs://[BUCKET_NAME]
+
+# Export data
+gcloud sql export sql [INSTANCE_NAME] gs://[BUCKET_NAME]/[FILE_NAME] \ --database=[DATABASE_NAME]
+gcloud sql export csv ace-exam-mysql1 gs://ace-exam-buckete1/ace-exam-mysql-export.csv \ --database=mysql
+
+# Import data
+gcloud sql import sql ace-exam-mysql1 gs://ace-exam-buckete1/ace-exam-mysql-export.sql \ --database=mysql
+```
+#### 2. Cloud Datastore
+* Use namespace data structure to group entities that are exported.
+* Exported data includes: A metadata file and a folder with the data
+
+```sh
+# Export
+gcloud datastore export --namespaces="(default)" gs://${BUCKET}
+
+# Import
+gcloud datastore import gs://${BUCKET}/[PATH]/[FILE].overall_export_metadata
+```
+#### 3. BigQuery
+* Can export to file format: CSV, Avro, JSON.
+* CSV is not optimized for storage. not compress or use a more efficient encoding than text.
+* JSON same csv, but it includes schema information with each record.
+* Gzip is a widely used lossless compression utility.
+* Avro is a compact binary format that supports complex data structures. Good option for large data sets. 2 compressed mode: deflate and snappy. Deflate: small compressed files. Snappy: faster.
+
+```sh
+# Export
+bq extract --destination_format [FORMAT] --compression [COMPRESSION_TYPE] --field_delimiter [DELIMITER] --print_header [BOOLEAN] [PROJECT_ID]:[DATASET]. [TABLE] gs://[BUCKET]/[FILENAME]
+# Ex:
+bq extract --destination_format CSV --compression GZIP 'mydataset.mytable' gs://example-bucket/myfile.zip
+
+# Load data form file
+bq load --autodetect --source_format=[FORMAT] [DATASET].[TABLE] [PATH_TO_SOURCE]
+bq load --autodetect --source_format=CSV mydataset.mytable gs://ace-exam-biquery/ mydata.csv
+```
+#### 4. Cloud Spanner
+- Only use console, can't not use gcloud command
+#### 5. Cloud Bigtable
++ Use HBase commands: https://hbaseapache.org/book.html/
+#### 6. Cloud Dataproc
+Dataproc is a data analystic tool. So when you export from Dataproc, you are exporting the cluster configuration, not data in the cluster
+
+```sh
+# Export a Dataproc cluster
+gcloud beta dataproc clusters export [CLUSTER_NAME] --destination=[PATH_TO_EXPORT_FILE]
+
+gcloud beta dataproc clusters export ace-exam-dataproc-cluster --destination=gs://ace-exam-bucket1/mydataproc.yaml
+
+# Import
+gcloud beta dataproc clusters import gs://ace-exam-bucket1/mydataproc.yaml
+```
+### Streaming Data to Cloud Pub/Sub
+
+```sh
+gcloud pubsub topics create ace-exam-topic1
+gcloud pubsub subscriptions create --topic=ace-exam-topic1 ace-exam-sub1
+
+# Send data to topic
+cloud pubsub topics publish [TOPIC_NAME] --message [MESSAGE]
+
+# Read that mesage from subscription
+gcloud pubsub subscriptions pull --auto-ack [SUBSCRIPTION_NAME]
+```
+
 ## Chapter 14. Networking in the Cloud: Virtual Private Clouds and Virtual Private Networks
 
 ## Chapter 15. Networking in the Cloud: DNS, Load Balancing, and IP Addressing
