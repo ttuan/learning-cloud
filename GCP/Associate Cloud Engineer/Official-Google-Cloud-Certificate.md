@@ -1077,6 +1077,155 @@ gcloud pubsub subscriptions pull --auto-ack [SUBSCRIPTION_NAME]
 
 ## Chapter 14. Networking in the Cloud: Virtual Private Clouds and Virtual Private Networks
 
+### Creating a Virtual Private Cloud with Subnets
+
+#### 1. Create VPC and Subnets
+* VPCs are software versions of physical networks that link resources in a project
+* GCP automatically creates a VPC when you create a project.
+* VPCs are **global resources**, so they are not tied to a specific region or zone
+* VPCs contain subnetworks, call **subnets**, which are **regional resources**. Subnets provide private internal addresses. Resources use these addresses to communicate with each other.
+* We can create shared VPC. can use VPC peering for interproject connectivity.
+
+---
+
+* When a VPC is created, **subnets are created in each region**. GCP chooses a range of IP addresses for each subnet when creating an auto mode network.
+* You can create one or more custom subnets. Can specify a region and an IP address range.
+* CIDR (Classless inter-domain routing)
+* You can turn off Private Google Access. That allows VMs on the subnet to access Google services without assigning an external IP address to the VM.
+* You can turn on logging of network traffic by setting the Flow Logs option to on.
+
+---
+* The Firewall Rules section lists rules that can be applied to the VPC (Ingress and Egress).
+* The **dynamic routing** option determines what routes are learned. Regional routing will have Google Cloud Routers learn routes within the region. Global routing will enable Google Cloud Routers to learn routes on all subnetworks in the VPC.
+* The optional DNS server policy lets you choose a DNS policy that enables DNS name resolution provided by GCP or makes changes to name resolution order.
+
+```sh
+# Create VPC
+gcloud compute networks create ace-exam-vpc1 --subnet-mode=auto
+gcloud compute networks create ace-exam-vpc1 --subnet-mode=custom
+gcloud compute networks subnet create
+
+gcloud beta compute networks subnets create ace-exam-vpc-subnet1 --network=ace-exam-vpc1 --region=us-west2 --range=10.10.0.0/16 --enable-private-ip-google- access --enable-flow-logs
+```
+
+* CIDR addresses consist of two sets of numbers, a **network address** for identifying a subnet and a **host identifier**.
+
+> Example network addresses, according to the RFC1918 specification
+>
+> 10.0.0.0
+>
+> 172.16,0.0
+>
+> 192.168.0.0
+
+* CIDR notation adds a slash (/) and a number indicating how many bits of an IP address to allocate to the network mask, which determines which addresses are within the block of the address and which are not.
+
+For example, 192.168.0.0/16 means that 16 bits of the 32 bits of an IP address are used to specify the network, and 16 bits are used to specify the host address. With 16 bits, you can create 216 or 65,536 addresses.
+The CIDR block 172.16.0.0/12 indicates that 12 bits are used for specifying the net-
+work, and 20 bits are used to specify host addresses. With 20 bits, you can create up
+to 1,048,576 addresses. In general, **the smaller the number after the slash, the more addresses are available**.
+
+#### 2. Create a Shared VPC
+* Before executing commands to create a shared VPC, you will need to assign an org member the **Shared VPC Admin role** at the organization level or the folder level. (**roles/compute.xpnAdmin**)
+
+```sh
+# Add IAM
+# Get org id
+gcloud organizations list
+gcloud organizations add-iam-policy-binding [ORG_ID] --member='user:[EMAIL_ADDRESS]' --role="roles/compute.xpnAdmin"
+
+# Get folder id
+gcloud beta resource-manager folders list --organization=[ORG_ID]
+gcloud beta resource-manager folders add-iam-policy-binding [FOLDER_ID] --member='user:[EMAIL_ADDRESS]'
+--role="roles/compute.xpnAdmin"
+
+# Issue the shared-vpc at org level
+gcloud compute shared-vpc enable [HOST_PROJECT_ID]
+
+# Issue the sharing VPC at folder level
+gcloud beta compute shared-vpc enable [HOST_PROJECT_ID]
+
+# Associate projects
+## Org level
+gcloud compute shared-vpc associated-projects add [SERVICE_PROJECT_ID] \ --host-project [HOST_PROJECT_ID]
+
+## Folder level
+gcloud beta compute shared-vpc associated-projects add [SERVICE_PROJECT_ID] \ --host-project [HOST_PROJECT_ID]
+```
+
+VPC Peering
+
+```sh
+gcloud compute networks peerings create peer-ace-exam-1 \
+	--network ace-exam-network-A \
+	--peer-project ace-exam-project-B \
+	--peer-network ace-exam-network-B \
+	--auto-create-routes
+
+gcloud compute networks peerings create peer-ace-exam-1 \
+	--network ace-exam-network-B \
+	--peer-project ace-exam-project-A \
+	--peer-network ace-exam-network-A \
+	--auto-create-routes
+```
+
+### Deploying Compute Engine with a Custom Network
+
+```sh
+# Create instance with subnet
+gcloud compute instances create [INSTANCE_NAME] --subnet [SUBNET_NAME] --zone [ZONE_NAME]
+```
+### Creating Firewall Rules for a Virtual Private Cloud
+* Firewall rules are defined at the network level and used to control the flow of network traf- fic to VMs.
+* Firewall rules allow or deny a kind of traffic on a port (ex: TCP traffic to port 22)
+* Firewall is **stateful** which means if traffic is allowed in one direction and a connection established, it is allowed in the other direction.
+* An active connection is one with at least one packet exchanged every ten minutes.
+
+#### 1. Structure of Firewall Rules
+* **Direction**: Ingress or Egress
+* **Priority**: 0 to 65535. 0 is highest, 65535 is lowest. Highest priority rules are applied.
+* **Action**: Allow or deny.
+* **Target**: Instance to which the rule applies. Can be all instances in a network, instances with network tags, instances using a specific service account.
+* **Source/Destination**: Source applies to ingress rules and specifies source IP ranges, instances with particular nw tags, instances using particular service account. [reference](https://cloud.google.com/vpc/docs/firewalls#rule_assignment)
+* **Protocol and port**: TCP, UDP, ICMP and port number. If no protocol is specified, rule applies to all protocols.
+* **Enforcement status**: Enabled/ Disabled. Disabled rules are not applied even if they match. Disabling is sometimes used to troubleshoot problems.
+
+
+All VPCs start with 2 rules: One allow egress traffic to all destinations (0.0.0.0/0), and one deinies all incoming traffic from any source. Both have priority 65535. Can not delete this rules.
+
+#### 2. Creating Firewall Rules
+
+```sh
+# Avaiable options:
+# --action
+# --allow
+# --description
+# --destination-ranges --direction
+# --network
+# --priority
+# --source-ranges
+# --source-service-accounts
+# --source-tags
+# --target-service-accounts
+# --target-tags
+
+gcloud compute firewall-rules create ace-exam-fwr2 –-network ace-exam-vpc1 –-allow tcp:20000-25000
+```
+
+### Creating a Virtual Private Network
+
+VPNs allow you to securely send network traffic from the Google network to your own network.
+
+```sh
+gcloud compute target-vpn-gateways
+gcloud compute forwarding-rule
+gcloud compute vpn-tunnels
+
+gcloud compute vpn-tunnels create NAME --peer-address=PEER_ADDRESS --shared-secret=SHARED_SECRET --target-vpn-gateway=TARGET_VPN_GATEWAY
+
+gcloud compute forwarding-rules create NAME --TARGET_SPECIFICATION=VPN_GATEWAY
+```
+
 ## Chapter 15. Networking in the Cloud: DNS, Load Balancing, and IP Addressing
 
 ## Chapter 16. Deploying Applications with Cloud Launcher and Deployment Manager
